@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal do Vinil | Produto</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="page-store">
+  <header class="store-header">
+    <a class="brand" href="index.html" aria-label="Portal do Vinil">
+      <span class="brand__icon" aria-hidden="true"></span>
+      <span class="brand__text">
+        <strong>Portal</strong>
+        <small>do Vinil</small>
+      </span>
+    </a>
+
+    <form class="search-form" action="search.html" method="get">
+      <input type="search" name="q" placeholder="Buscar discos, artistas e lançamentos" />
+      <button type="submit" class="icon-btn" aria-label="Pesquisar">⌕</button>
+    </form>
+
+    <div class="header-actions">
+      <a class="icon-btn icon-btn--link" href="login.html" aria-label="Perfil">◔</a>
+      <button type="button" class="icon-btn" aria-label="Carrinho">⌁</button>
+    </div>
+  </header>
+
+  <nav class="store-nav" aria-label="Categorias">
+    <a href="search.html">Vinis</a>
+    <a href="search.html">Vitrolas</a>
+    <a href="search.html">CD's</a>
+    <a href="search.html">Artistas</a>
+    <a href="search.html">Ofertas</a>
+  </nav>
+
+  <main class="store-main">
+    <section class="product-layout">
+      <section class="product-detail">
+        <div class="product-media">
+          <div class="product-art product-art--mac"></div>
+        </div>
+
+        <div class="product-info">
+          <h1>Mac Miller - Circles 2 X Lp Colored Vinyl Album W/ Bonus Trx Sealed</h1>
+          <p class="price">R$ 246,15</p>
+          <p class="installments">Em ate 6x R$ 41,025 sem juros</p>
+
+          <div class="quantity-row">
+            <span>Quantidade</span>
+            <div class="quantity-control">
+              <button type="button" id="qtyDown">-</button>
+              <strong id="quantityValue">1</strong>
+              <button type="button" id="qtyUp">+</button>
+            </div>
+            <small id="stockLabel">2 disponivel(is)</small>
+          </div>
+
+          <div class="action-row">
+            <button type="button" class="btn btn-primary">Compre ja</button>
+            <button type="button" class="btn btn-secondary">Adicionar ao carrinho</button>
+          </div>
+
+          <div class="description-block">
+            <h2>Descricao</h2>
+            <p>Detalhes do produto</p>
+            <ul>
+              <li>Dimensoes do produto: 13,59 x 13,21 x 0,99 cm; 45,93 g</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <aside class="shipping-box">
+        <h2>Calcular Frete</h2>
+        <div class="shipping-grid">
+          <label>
+            <span>CEP</span>
+            <input id="cepInput" type="text" inputmode="numeric" placeholder="00000-000" />
+          </label>
+          <label>
+            <span>No Residencia</span>
+            <input id="houseInput" type="text" placeholder="12" />
+          </label>
+          <label class="shipping-grid__full">
+            <span>Endereco</span>
+            <input id="addressInput" type="text" placeholder="Rua, avenida, travessa..." />
+          </label>
+          <label class="shipping-grid__full">
+            <span>Bairro</span>
+            <input id="districtInput" type="text" placeholder="Bairro" />
+          </label>
+          <label class="shipping-grid__full">
+            <span>Complemento (Opcional)</span>
+            <input id="complementInput" type="text" placeholder="Apto, bloco, referencia..." />
+          </label>
+        </div>
+
+        <button type="button" class="btn btn-primary btn-full" id="calcShippingBtn">Calcular Frete</button>
+        <p class="shipping-result" id="shippingResult">Informe o CEP para simular o frete.</p>
+      </aside>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal do Vinil | Login</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="page-login">
+  <main class="login-screen">
+    <section class="login-side login-side--art" aria-hidden="true">
+      <div class="vinyl-shape vinyl-shape--top"></div>
+      <div class="vinyl-shape vinyl-shape--mid"></div>
+      <div class="vinyl-shape vinyl-shape--bottom"></div>
+      <div class="logo-blob">Portal do Vinil</div>
+    </section>
+
+    <section class="login-side login-side--form">
+      <h1>Entrar</h1>
+      <p>Acesse sua conta para continuar.</p>
+
+      <form class="auth-form" id="loginForm" action="index.html" method="get">
+        <label>
+          <span>E-mail, CPF ou CNPJ</span>
+          <input type="text" name="user" placeholder="E-mail, CPF ou CNPJ" required />
+        </label>
+
+        <label>
+          <span>Senha</span>
+          <input type="password" name="password" placeholder="Senha" required />
+        </label>
+
+        <button type="submit" class="btn btn-primary">Entrar</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
