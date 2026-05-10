@@ -1,0 +1,213 @@
+:root {
+  --bg: #f4eeea;
+  --paper: #efe6e1;
+  --panel: #c4ac9f;
+  --soft: #d9c8bf;
+  --text: #1f1917;
+  --muted: #594b43;
+  --accent: #e6c0a4;
+  --accent-2: #b99684;
+  --border: rgba(88, 63, 50, 0.25);
+  --shadow: 0 10px 24px rgba(65, 45, 35, 0.15);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  color: var(--text);
+  background: var(--bg);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* --- Botões --- */
+.btn {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--accent);
+}
+
+.btn-secondary {
+  background: var(--accent-2);
+  color: #1b1513;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+/* --- Header compartilhado (store pages) --- */
+.store-header {
+  display: grid;
+  grid-template-columns: 250px minmax(280px, 430px) 100px;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 36px;
+  background: var(--panel);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand__icon {
+  width: 42px;
+  height: 42px;
+  border: 3px solid #13100e;
+  border-left-width: 6px;
+  border-radius: 50%;
+  position: relative;
+}
+
+.brand__icon::before {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #13100e;
+  border-radius: 50%;
+  right: 2px;
+  top: 10px;
+}
+
+.brand__text strong,
+.brand__text small {
+  display: block;
+  line-height: 1;
+}
+
+.brand__text strong {
+  font-size: 1.2rem;
+}
+
+.brand__text small {
+  font-size: 1.05rem;
+}
+
+.search-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-form input {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: #f6f1ed;
+  outline: none;
+}
+
+.search-form input:focus {
+  border-color: #8f6f60;
+  box-shadow: 0 0 0 3px rgba(143, 111, 96, 0.15);
+}
+
+.icon-btn {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #efe8e3;
+  display: inline-grid;
+  place-items: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* --- Nav compartilhada (store pages) --- */
+.store-nav {
+  display: flex;
+  justify-content: center;
+  gap: 34px;
+  background: var(--soft);
+  padding: 12px 20px;
+}
+
+/* --- Layout base store --- */
+.page-store {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  min-height: 100vh;
+}
+
+.store-main {
+  padding: 28px 36px 40px;
+}
+
+/* --- Produto: arte do disco (card) --- */
+.product-art {
+  position: relative;
+  width: 100%;
+  height: 132px;
+  background:
+    radial-gradient(circle at 50% 45%, #f2d29a 0 14%, #e984b2 15% 22%, #9dd8f1 23% 27%, #f2d29a 28% 34%, transparent 35%),
+    linear-gradient(180deg, #fff 0 75%, #f3efec 76% 100%);
+}
+
+.product-art::after {
+  content: "";
+  position: absolute;
+  width: 98px;
+  height: 98px;
+  right: -10px;
+  top: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #111 0 20%, #1d1d1d 21% 100%);
+}
+
+/* --- Responsivo compartilhado --- */
+@media (max-width: 1100px) {
+  .store-header {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+
+  .header-actions {
+    justify-content: flex-start;
+  }
+
+  .store-main {
+    padding: 20px 16px 26px;
+  }
+}
+
+@media (max-width: 720px) {
+  .store-nav {
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: flex-start;
+    padding: 12px 16px;
+  }
+}

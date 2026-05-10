@@ -1,0 +1,195 @@
+@import url("base.css");
+
+.product-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: 24px;
+}
+
+.product-detail {
+  background: #ece4de;
+  padding: 22px;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
+}
+
+.product-media {
+  overflow-clip-margin: content-box;
+  overflow: clip;
+  padding: 5px;
+  margin-left: 50px;
+}
+
+.product-media img {
+  width: 100%;
+  display: block;
+}
+
+.product-art--mac {
+  height: 280px;
+}
+
+.product-art--mac::after {
+  width: 170px;
+  height: 170px;
+  right: 16px;
+  top: 56px;
+}
+
+.product-info h1 {
+  margin: 0 0 14px;
+  font-size: clamp(1.4rem, 2.7vw, 2.25rem);
+  font-weight: 400;
+}
+
+.price {
+  margin: 0;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+}
+
+.installments {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.quantity-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 20px;
+  flex-wrap: wrap;
+}
+
+.quantity-row small {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.quantity-control {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.quantity-control button {
+  width: 34px;
+  height: 34px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.quantity-control strong {
+  min-width: 44px;
+  display: inline-grid;
+  place-items: center;
+}
+
+.action-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.description-block {
+  margin-top: 24px;
+}
+
+.description-block h2,
+.description-block p {
+  margin: 0;
+}
+
+.description-block ul {
+  margin: 8px 0 0 18px;
+}
+
+/* --- Box de frete --- */
+.shipping-box {
+  background: #d2c0b6;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+}
+
+.shipping-box h2 {
+  margin: 0 0 12px;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.shipping-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+
+.shipping-grid label {
+  display: grid;
+  gap: 6px;
+}
+
+.shipping-grid__full {
+  grid-column: 1 / -1;
+}
+
+.shipping-grid input {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: #f6f1ed;
+  outline: none;
+}
+
+.shipping-grid input:focus {
+  border-color: #8f6f60;
+  box-shadow: 0 0 0 3px rgba(143, 111, 96, 0.15);
+}
+
+.shipping-result {
+  margin: 12px 0 0;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.btn-primary:hover {
+    background: #8f6f60;
+}
+
+.btn-secondary:hover {
+    background: --accent;
+}
+
+/* --- Responsivo --- */
+@media (max-width: 1100px) {
+  .product-layout,
+  .product-detail {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .product-detail {
+    padding: 16px;
+  }
+
+  .product-art--mac {
+    height: 220px;
+  }
+
+  .product-art--mac::after {
+    width: 130px;
+    height: 130px;
+    top: 45px;
+  }
+
+  .shipping-grid {
+    grid-template-columns: 1fr;
+  }
+}

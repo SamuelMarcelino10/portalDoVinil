@@ -83,7 +83,7 @@ if (document.getElementById("quantityValue") && document.getElementById("qtyDown
   const qtyUp = document.getElementById("qtyUp");
   const stockLabel = document.getElementById("stockLabel");
   let quantity = 1;
-  const stock = 2;
+  const stock = 4;
 
   function renderQuantity() {
     quantityValue.textContent = quantity;

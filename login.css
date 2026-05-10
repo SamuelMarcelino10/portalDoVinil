@@ -1,0 +1,114 @@
+/* =============================================
+   login.css — estilos exclusivos de login.html
+   ============================================= */
+@import url("base.css");
+
+.page-login {
+  background: #1f1d1b;
+}
+
+.login-screen {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.login-side {
+  padding: 56px;
+}
+
+/* --- Lado esquerdo: arte decorativa --- */
+.login-side--art {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 8% 10%, #ce8f81 0 72px, transparent 73px),
+    linear-gradient(135deg, #ad6e5e, #cca092 65%, #dcc7bc);
+}
+
+.vinyl-shape {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #c88f81 0 20%, #443833 21% 25%, #7b665e 26% 44%, #282220 45% 100%);
+}
+
+.vinyl-shape--top {
+  width: 280px;
+  height: 280px;
+  left: -90px;
+  top: -30px;
+}
+
+.vinyl-shape--mid {
+  width: 390px;
+  height: 390px;
+  left: 200px;
+  top: 40px;
+}
+
+.vinyl-shape--bottom {
+  width: 300px;
+  height: 300px;
+  left: -80px;
+  bottom: -90px;
+}
+
+.logo-blob {
+  position: absolute;
+  left: 64px;
+  bottom: 54px;
+  padding: 14px 20px;
+  border: 3px solid #181311;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.16);
+  font-size: 1.6rem;
+}
+
+/* --- Lado direito: formulário --- */
+.login-side--form {
+  display: grid;
+  align-content: center;
+  gap: 14px;
+  background: #dcc9bf;
+}
+
+.login-side--form h1,
+.login-side--form p {
+  margin: 0;
+}
+
+.auth-form {
+  display: grid;
+  gap: 14px;
+  max-width: 420px;
+}
+
+.auth-form label {
+  display: grid;
+  gap: 6px;
+}
+
+.auth-form input {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: #f6f1ed;
+  outline: none;
+}
+
+.auth-form input:focus {
+  border-color: #8f6f60;
+  box-shadow: 0 0 0 3px rgba(143, 111, 96, 0.15);
+}
+
+/* --- Responsivo --- */
+@media (max-width: 1100px) {
+  .login-screen {
+    grid-template-columns: 1fr;
+  }
+
+  .login-side {
+    padding: 28px;
+  }
+}

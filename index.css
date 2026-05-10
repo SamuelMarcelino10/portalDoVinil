@@ -1,0 +1,85 @@
+/* =============================================
+   index.css — estilos exclusivos de index.html
+   ============================================= */
+@import url("base.css");
+
+/* --- Banner promocional --- */
+.promo-banner {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  align-items: center;
+  background: #ccb9ae;
+  min-height: 210px;
+  padding: 24px 30px;
+  margin-bottom: 26px;
+}
+
+.promo-banner h1,
+.promo-banner p {
+  margin: 0;
+}
+
+.promo-banner h1 {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 500;
+}
+
+.promo-banner p {
+  margin-top: 8px;
+  font-size: 1.4rem;
+}
+
+.promo-banner__art {
+  min-height: 130px;
+  background:
+    radial-gradient(circle at 32% 50%, #101010 0 55px, transparent 56px),
+    linear-gradient(135deg, #f0d8ca 0 45%, #e3bca7 46% 100%);
+}
+
+/* --- Grid de produtos --- */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(180px, 1fr));
+  gap: 22px;
+}
+
+.product-card {
+  background: #d7c8bf;
+  padding: 12px;
+  color: inherit;
+}
+
+.product-card h2 {
+  margin: 12px 0 6px;
+  font-size: 1.05rem;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.product-card strong {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 400;
+}
+
+.product-card span {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+/* --- Responsivo --- */
+@media (max-width: 1100px) {
+  .promo-banner {
+    grid-template-columns: 1fr;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+}
