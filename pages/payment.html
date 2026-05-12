@@ -36,63 +36,101 @@
   </nav>
 
   <main class="store-main">
-    <section class="payment-layout">
-      <article class="payment-panel">
-        <h1>Finalizar compra</h1>
-        <p class="payment-note">Estrutura base da etapa de checkout, pronta para receber os campos finais do fluxo.</p>
+    <section class="payment-shell" aria-labelledby="paymentTitle">
+      <h1 id="paymentTitle" class="payment-title">Pagamento</h1>
 
-        <form class="payment-form">
-          <div class="payment-grid">
+      <div class="payment-layout">
+        <article class="payment-card payment-card--methods">
+          <h2>Forma de Pagamento</h2>
+
+          <form class="payment-options" aria-label="Selecionar forma de pagamento">
+            <label class="payment-option">
+              <input type="radio" name="payment-method" value="boleto" />
+              <span class="payment-option__marker" aria-hidden="true"></span>
+              <span class="payment-option__icon payment-option__icon--boleto" aria-hidden="true"><span></span></span>
+              <span class="payment-option__label">Boleto bancário</span>
+            </label>
+
+            <label class="payment-option">
+              <input type="radio" name="payment-method" value="pix" checked />
+              <span class="payment-option__marker" aria-hidden="true"></span>
+              <span class="payment-option__icon payment-option__icon--pix" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+              <span class="payment-option__label">Pix</span>
+            </label>
+
+            <label class="payment-option">
+              <input type="radio" name="payment-method" value="credit" />
+              <span class="payment-option__marker" aria-hidden="true"></span>
+              <span class="payment-option__icon payment-option__icon--credit" aria-hidden="true">
+                <span class="payment-option__stripe payment-option__stripe--gold"></span>
+                <span class="payment-option__stripe payment-option__stripe--purple"></span>
+                <span class="payment-option__chip"></span>
+              </span>
+              <span class="payment-option__label">Cartão de Crédito</span>
+            </label>
+
+            <label class="payment-option">
+              <input type="radio" name="payment-method" value="paypal" />
+              <span class="payment-option__marker" aria-hidden="true"></span>
+              <span class="payment-option__icon payment-option__icon--paypal" aria-hidden="true">P</span>
+              <span class="payment-option__label">PayPal</span>
+            </label>
+          </form>
+        </article>
+
+        <article class="payment-card payment-card--address">
+          <h2>Informações de endereço</h2>
+
+          <form class="payment-address" aria-label="Preencher endereço de cobrança">
             <label>
-              <span>Nome</span>
-              <input type="text" placeholder="Seu nome" />
+              <span class="sr-only">Rua</span>
+              <input type="text" placeholder="Rua" />
             </label>
             <label>
-              <span>Telefone</span>
-              <input type="tel" placeholder="(11) 99999-9999" />
+              <span class="sr-only">Endereço</span>
+              <input type="text" placeholder="Endereço" />
             </label>
-            <label class="payment-grid__full">
-              <span>Endereço de entrega</span>
-              <input type="text" placeholder="Rua, número, bairro" />
-            </label>
-            <label>
-              <span>Forma de pagamento</span>
-              <select>
-                <option>Cartão de crédito</option>
-                <option>Pix</option>
-                <option>Cartão de débito</option>
-              </select>
-            </label>
-            <label>
-              <span>Parcelas</span>
-              <select>
-                <option>1x</option>
-                <option>2x</option>
-                <option>3x</option>
-                <option>6x</option>
-              </select>
-            </label>
+            <div class="payment-address__row">
+              <label>
+                <span class="sr-only">CEP</span>
+                <input type="text" placeholder="CEP" />
+              </label>
+              <label>
+                <span class="sr-only">Número</span>
+                <input type="text" placeholder="Número" />
+              </label>
+            </div>
+            <div class="payment-address__row">
+              <label>
+                <span class="sr-only">Estado</span>
+                <input type="text" placeholder="Estado" />
+              </label>
+              <div class="payment-country" aria-label="País selecionado: Brasil">
+                <span class="payment-country__flag" aria-hidden="true"></span>
+                <span class="payment-country__arrow" aria-hidden="true"></span>
+              </div>
+            </div>
+          </form>
+        </article>
+
+        <article class="payment-card payment-card--confirmation">
+          <h2>Confirmação de Pagamento</h2>
+
+          <div class="payment-qr" aria-label="QR code para pagamento" role="img">
+            <span></span>
           </div>
 
-          <button type="button" class="btn btn-primary btn-full">Confirmar pagamento</button>
-        </form>
-      </article>
-
-      <aside class="payment-panel order-summary">
-        <h2>Resumo do pedido</h2>
-
-        <div class="order-item">
-          <img src="../pics/mac.jpg" alt="Capa do disco Mac Miller - Circles">
-          <h3>Mac Miller - Circles 2 X Lp Colored Vinyl Album W/ Bonus Trx Sealed</h3>
-          <p>1 unidade</p>
-          <strong>R$ 246,15</strong>
-        </div>
-
-        <div class="order-total">
-          <span>Total</span>
-          <strong>R$ 246,15</strong>
-        </div>
-      </aside>
+          <button type="button" class="payment-code" aria-label="Copiar código Pix">
+            <span class="payment-code__icon" aria-hidden="true"></span>
+            <span class="payment-code__text">J90jlksui6hsdg78op233...</span>
+          </button>
+        </article>
+      </div>
     </section>
   </main>
 </body>
