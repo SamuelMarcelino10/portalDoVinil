@@ -127,7 +127,6 @@
   gap: 12px;
 }
 
-
 .shipping-grid label {
   display: grid;
   gap: 6px;
@@ -159,11 +158,11 @@
 }
 
 .btn-primary:hover {
-    background: #8f6f60;
+  background: #8f6f60;
 }
 
 .btn-secondary:hover {
-    background: --accent;
+  background: var(--accent);
 }
 
 /* --- Responsivo --- */

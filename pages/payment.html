@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal do Vinil | Pagamento</title>
+  <link rel="stylesheet" href="../assets/css/payment.css" />
+</head>
+<body class="page-store page-payment">
+  <header class="store-header">
+    <a class="brand" href="../index.html" aria-label="Portal do Vinil">
+      <span class="brand__icon" aria-hidden="true"></span>
+      <span class="brand__text">
+        <strong>Portal</strong>
+        <small>do Vinil</small>
+      </span>
+    </a>
+
+    <form class="search-form" action="search.html" method="get">
+      <input type="search" name="q" placeholder="Buscar discos, artistas e lançamentos" />
+      <button type="submit" class="icon-btn" aria-label="Pesquisar">⌕</button>
+    </form>
+
+    <div class="header-actions">
+      <a class="icon-btn icon-btn--link" href="login.html" aria-label="Perfil">◔</a>
+      <button type="button" class="icon-btn" aria-label="Carrinho">⌁</button>
+    </div>
+  </header>
+
+  <nav class="store-nav" aria-label="Categorias">
+    <a href="search.html">Vinis</a>
+    <a href="search.html">Vitrolas</a>
+    <a href="search.html">CD's</a>
+    <a href="search.html">Artistas</a>
+    <a href="search.html">Ofertas</a>
+  </nav>
+
+  <main class="store-main">
+    <section class="payment-layout">
+      <article class="payment-panel">
+        <h1>Finalizar compra</h1>
+        <p class="payment-note">Estrutura base da etapa de checkout, pronta para receber os campos finais do fluxo.</p>
+
+        <form class="payment-form">
+          <div class="payment-grid">
+            <label>
+              <span>Nome</span>
+              <input type="text" placeholder="Seu nome" />
+            </label>
+            <label>
+              <span>Telefone</span>
+              <input type="tel" placeholder="(11) 99999-9999" />
+            </label>
+            <label class="payment-grid__full">
+              <span>Endereço de entrega</span>
+              <input type="text" placeholder="Rua, número, bairro" />
+            </label>
+            <label>
+              <span>Forma de pagamento</span>
+              <select>
+                <option>Cartão de crédito</option>
+                <option>Pix</option>
+                <option>Cartão de débito</option>
+              </select>
+            </label>
+            <label>
+              <span>Parcelas</span>
+              <select>
+                <option>1x</option>
+                <option>2x</option>
+                <option>3x</option>
+                <option>6x</option>
+              </select>
+            </label>
+          </div>
+
+          <button type="button" class="btn btn-primary btn-full">Confirmar pagamento</button>
+        </form>
+      </article>
+
+      <aside class="payment-panel order-summary">
+        <h2>Resumo do pedido</h2>
+
+        <div class="order-item">
+          <img src="../pics/mac.jpg" alt="Capa do disco Mac Miller - Circles">
+          <h3>Mac Miller - Circles 2 X Lp Colored Vinyl Album W/ Bonus Trx Sealed</h3>
+          <p>1 unidade</p>
+          <strong>R$ 246,15</strong>
+        </div>
+
+        <div class="order-total">
+          <span>Total</span>
+          <strong>R$ 246,15</strong>
+        </div>
+      </aside>
+    </section>
+  </main>
+</body>
+</html>

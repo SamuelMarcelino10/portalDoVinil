@@ -2,6 +2,7 @@ const searchInput = document.getElementById("searchInput");
 const priceMin = document.getElementById("priceMin");
 const priceMax = document.getElementById("priceMax");
 const priceMaxLabel = document.getElementById("priceMaxLabel");
+const priceMinLabel = document.getElementById("priceMinLabel");
 const genreButtons = document.querySelectorAll(".genre-pill");
 const filterCount = document.getElementById("filterCount");
 const resultCards = document.querySelectorAll("[data-product]");
@@ -17,7 +18,7 @@ const loginForm = document.getElementById("loginForm");
 if (loginForm) {
   loginForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    window.location.href = "index.html";
+    window.location.href = "../index.html";
   });
 }
 
@@ -30,7 +31,7 @@ function formatCurrency(value) {
 }
 
 function applyFilters() {
-  if (!searchInput || !priceMin || !priceMax || !priceMaxLabel || !filterCount || !resultCards.length) {
+  if (!searchInput || !priceMin || !priceMax || !priceMinLabel || !priceMaxLabel || !filterCount || !resultCards.length) {
     return;
   }
 
@@ -41,6 +42,7 @@ function applyFilters() {
     .filter((button) => button.classList.contains("is-active"))
     .map((button) => button.dataset.genre);
 
+  priceMinLabel.textContent = min === 0 ? "Qualquer valor" : `A partir de ${formatCurrency(min)}`;
   priceMaxLabel.textContent = `Até ${formatCurrency(max)}`;
   filterCount.textContent = `(${activeGenres.length || 1})`;
 
