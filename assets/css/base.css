@@ -112,18 +112,19 @@ button {
 
 .search-form {
   display: flex;
-  align-items: center;
-  gap: 6px;
+  align-items: stretch;
+  position: relative;
   justify-self: center;
   width: 100%;
+  max-width: 390px;
 }
 
 .search-form input {
-  width: 100%;
   border: 1px solid var(--border);
   border-radius: 10px;
-  height: 30px;
-  padding: 0 12px;
+  width: 100%;
+  height: 34px;
+  padding: 0 42px 0 12px;
   background: #f6f1ed;
   outline: none;
 }
@@ -146,6 +147,35 @@ button {
   place-items: center;
   cursor: pointer;
   text-decoration: none;
+}
+
+.search-form .icon-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  transform: translateY(-50%);
+  border: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+.search-form::after {
+  content: "";
+  position: absolute;
+  right: 34px;
+  top: 50%;
+  width: 1px;
+  height: 18px;
+  background: var(--border);
+  transform: translateY(-50%);
+}
+
+.icon-btn img {
+  width: 18px;
+  height: 18px;
+  display: block;
 }
 
 .header-actions {
