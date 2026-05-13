@@ -18,66 +18,40 @@
 .login-side--art {
   position: relative;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 8% 10%, #ce8f81 0 72px, transparent 73px),
-    linear-gradient(135deg, #ad6e5e, #cca092 65%, #dcc7bc);
+  background: #b07f74;
 }
 
-.vinyl-shape {
+.login-side__art {
   position: absolute;
-  border-radius: 50%;
-  background: radial-gradient(circle at center, #c88f81 0 20%, #443833 21% 25%, #7b665e 26% 44%, #282220 45% 100%);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.vinyl-shape--top {
-  width: 280px;
-  height: 280px;
-  left: -90px;
-  top: -30px;
-}
-
-.vinyl-shape--mid {
-  width: 390px;
-  height: 390px;
-  left: 200px;
-  top: 40px;
-}
-
-.vinyl-shape--bottom {
-  width: 300px;
-  height: 300px;
-  left: -80px;
-  bottom: -90px;
-}
-
-.logo-blob {
+.login-side__logo {
   position: absolute;
-  left: 64px;
-  bottom: 54px;
-  padding: 14px 20px;
-  border: 3px solid #181311;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.16);
-  font-size: 1.6rem;
+  left: 50%;
+  top: 50%;
+  width: min(44vw, 320px);
+  transform: translate(-50%, -50%);
+  display: block;
 }
 
 /* --- Lado direito: formulário --- */
 .login-side--form {
   display: grid;
   align-content: center;
-  gap: 14px;
   background: #dcc9bf;
-}
-
-.login-side--form h1,
-.login-side--form p {
-  margin: 0;
+  justify-items: center;
+  padding: 28px;
 }
 
 .auth-form {
   display: grid;
-  gap: 14px;
-  max-width: 420px;
+  gap: 18px;
+  width: min(100%, 350px);
 }
 
 .auth-form label {
@@ -88,8 +62,9 @@
 .auth-form input {
   width: 100%;
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 12px 14px;
+  border-radius: 10px;
+  height: 38px;
+  padding: 0 12px;
   background: #f6f1ed;
   outline: none;
 }
@@ -97,6 +72,15 @@
 .auth-form input:focus {
   border-color: #8f6f60;
   box-shadow: 0 0 0 3px rgba(143, 111, 96, 0.15);
+}
+
+.auth-form span {
+  display: none;
+}
+
+.auth-form button {
+  width: 150px;
+  justify-self: center;
 }
 
 /* --- Responsivo --- */
