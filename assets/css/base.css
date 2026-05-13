@@ -151,14 +151,13 @@ button {
 
 .search-form .icon-btn {
   position: absolute;
-  right: 8px;
-  top: 50%;
-  width: 20px;
-  height: 20px;
-  transform: translateY(-50%);
+  right: 0;
+  top: 0;
+  width: 34px;
+  height: 34px;
   border: 0;
   background: transparent;
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .search-form::after {
