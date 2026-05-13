@@ -205,16 +205,18 @@ button {
 }
 
 /* --- Produto: arte do disco (card) --- */
-.product-art {
+ .product-art {
   position: relative;
   width: 100%;
-  height: 132px;
-  background:
-    radial-gradient(circle at 50% 45%, #f2d29a 0 14%, #e984b2 15% 22%, #9dd8f1 23% 27%, #f2d29a 28% 34%, transparent 35%),
-    linear-gradient(180deg, #fff 0 75%, #f3efec 76% 100%);
+  height: 334px;
+}
+.product-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
-.product-art::after {
+/*.product-art::after {
   content: "";
   position: absolute;
   width: 98px;
@@ -223,7 +225,7 @@ button {
   top: 16px;
   border-radius: 50%;
   background: radial-gradient(circle at center, #111 0 20%, #1d1d1d 21% 100%);
-}
+} */
 
 /* --- Responsivo compartilhado --- */
 @media (max-width: 1100px) {

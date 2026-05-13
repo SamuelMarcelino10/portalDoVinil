@@ -72,6 +72,7 @@
 .result-card {
   background: #d7c8bf;
   padding: 12px;
+  height: min-content;
   color: inherit;
 }
 
