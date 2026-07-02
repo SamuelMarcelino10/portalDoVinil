@@ -8,7 +8,7 @@
   min-height: 210px;
   margin-bottom: 26px;
 }
-
+/* OI */
 .promo-banner h1,
 .promo-banner p {
   margin: 0;
@@ -37,7 +37,7 @@
 }
 
 .product-card {
-  background: #d7c8bf;
+  background: var(--muted);
   padding: 12px;
   color: inherit;
 }

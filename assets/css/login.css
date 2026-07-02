@@ -18,7 +18,7 @@
 .login-side--art {
   position: relative;
   overflow: hidden;
-  background: #b07f74;
+  background: var(--bg);
 }
 
 .login-side__art {
@@ -38,12 +38,12 @@
   transform: translate(-50%, -50%);
   display: block;
 }
-
+/* PIM */
 /* --- Lado direito: formulário --- */
 .login-side--form {
   display: grid;
   align-content: center;
-  background: #dcc9bf;
+  background: var(--bg);
   justify-items: center;
   padding: 28px;
 }
@@ -65,12 +65,12 @@
   border-radius: 10px;
   height: 38px;
   padding: 0 12px;
-  background: #f6f1ed;
+  background: var(--muted);
   outline: none;
 }
 
 .auth-form input:focus {
-  border-color: #8f6f60;
+  border-color: var(--border);
   box-shadow: 0 0 0 3px rgba(143, 111, 96, 0.15);
 }
 

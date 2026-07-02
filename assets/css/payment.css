@@ -1,8 +1,8 @@
 @import url("base.css");
 
 .page-payment {
-  background:
-    linear-gradient(180deg, #b99d8c 0 74px, #f1e8e3 74px 100%);
+  background:  var(--bg);
+    /* linear-gradient(180deg, #b99d8c 0 74px, #f1e8e3 74px 100%); */
 }
 
 .page-payment .store-main {
@@ -20,7 +20,7 @@
   font-size: clamp(2rem, 2.4vw, 2.5rem);
   font-weight: 500;
   letter-spacing: -0.03em;
-  color: #111;
+  color: var(--text);
 }
 
 .payment-layout {
@@ -32,10 +32,9 @@
 .payment-card {
   min-height: 332px;
   padding: 26px 18px 22px;
-  border: 1px solid rgba(132, 100, 83, 0.35);
-  border-radius: 20px;
-  background: #cdb9ae;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  /* border: 1px solid var(--border); */
+  background: var(--soft);
+  box-shadow: inset 0 1px 0 var(--shadow);
 }
 
 .payment-card h2 {
@@ -43,7 +42,7 @@
   text-align: center;
   font-size: 1rem;
   font-weight: 500;
-  color: #111;
+  color: var(--text);
 }
 
 .payment-options,
@@ -61,8 +60,8 @@
   min-height: 34px;
   padding: 0 12px 0 10px;
   border-radius: 4px;
-  background: #f4f0ed;
-  color: #221815;
+  background: var(--bg);
+  color: var(--text);
   cursor: pointer;
 }
 
@@ -77,14 +76,14 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  border: 1.5px solid #9f8372;
+  border: 1.5px solid var(--border);
   background: transparent;
 }
 
 .payment-option--selected .payment-option__marker,
 .payment-option input:checked ~ .payment-option__marker {
-  background: #b99782;
-  border-color: #b99782;
+  background: var(--bg);
+  border-color: var(--border);
 }
 
 .payment-option__label {
@@ -175,11 +174,11 @@
 .payment-address select {
   width: 100%;
   height: 35px;
-  border: 1px solid rgba(171, 146, 132, 0.3);
+  border: 1px solid var(--border);
   border-radius: 3px;
   padding: 0 12px;
-  background: #f4f0ed;
-  color: #7f766e;
+  background: var(--bg);
+  color: var(--text);
   outline: none;
 }
 
@@ -195,9 +194,9 @@
   justify-content: center;
   gap: 8px;
   height: 35px;
-  border: 1px solid rgba(171, 146, 132, 0.3);
+  border: 1px solid var(--border);
   border-radius: 3px;
-  background: #f4f0ed;
+  background: var(--bg);
   padding: 0 10px;
 }
 
@@ -249,14 +248,14 @@
   padding: 0;
   border: 0;
   background: transparent;
-  color: #7d7269;
+  color: var(--text);
   font-size: 0.95rem;
 }
 
 .payment-code__icon {
   width: 14px;
   height: 14px;
-  border: 1px solid #7d7269;
+  border: 1px solid var(--border);
   border-radius: 2px;
   position: relative;
 }
@@ -268,7 +267,7 @@
   top: -3px;
   width: 100%;
   height: 100%;
-  border: 1px solid #7d7269;
+  border: 1px solid var(--border);
   border-radius: 2px;
   background: rgba(255, 255, 255, 0.25);
 }
@@ -296,3 +295,5 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ARTHUR */

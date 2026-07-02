@@ -1,15 +1,17 @@
 :root {
-  --bg: #f4eeea;
-  --paper: #efe6e1;
-  --panel: #c4ac9f;
-  --soft: #d9c8bf;
   --text: #1f1917;
-  --muted: #594b43;
-  --accent: #e6c0a4;
-  --accent-2: #b99684;
-  --border: rgba(88, 63, 50, 0.25);
+  --accent: #9BA657; /* HOVER DOS BOTÕES*/
+  --accent-2: #be4c54 ;
+  --border: rgba(88, 63, 50, 0.25); 
   --shadow: 0 10px 24px rgba(65, 45, 35, 0.15);
-}
+  --panel : #8a7b6a ;
+  --botoes : #be4c54 ;
+  --soft:   #c6b299 ;
+  --muted : #e6d5c1 ;
+  --bg:  #fff4e3 ;
+} 
+
+/* VARAIAVEIS DE COR */
 
 * {
   box-sizing: border-box;
@@ -46,13 +48,13 @@ button {
 }
 
 .btn-primary {
-  background: var(--accent);
+  background: var(--botoes);
 }
 
 .btn-secondary {
   background: var(--accent-2);
-  color: #1b1513;
-}
+  color: var(--text);
+} 
 
 .btn-full {
   width: 100%;
@@ -97,7 +99,7 @@ button {
 .brand__text small {
   display: block;
   line-height: 1;
-  color: #fff;
+  color: var(--bg);
 }
 
 .brand__text strong {
@@ -123,12 +125,12 @@ button {
   width: 100%;
   height: 34px;
   padding: 0 42px 0 12px;
-  background: #f6f1ed;
+  background: var(--bg);
   outline: none;
 }
 
 .search-form input:focus {
-  border-color: #8f6f60;
+  border-color: var(--border);
   box-shadow: 0 0 0 3px rgba(143, 111, 96, 0.15);
 }
 

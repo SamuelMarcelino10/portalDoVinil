@@ -7,7 +7,7 @@
 }
 
 .product-detail {
-  background: #ece4de;
+  background: var(--muted);
   padding: 22px;
   display: grid;
   grid-template-columns: 320px 1fr;
@@ -49,7 +49,7 @@
 }
 
 .installments {
-  color: var(--muted);
+  color: var(--text);
   font-size: 0.85rem;
 }
 
@@ -62,7 +62,7 @@
 }
 
 .quantity-row small {
-  color: var(--muted);
+  color: var(--text);
   font-size: 0.85rem;
 }
 
@@ -109,9 +109,9 @@
 
 /* --- Box de frete --- */
 .shipping-box {
-  background: #d2c0b6;
-  border: 1px solid var(--border);
-  border-radius: 16px;
+  background: var(--muted);
+  /* border: 1px solid var(--border);
+  border-radius: 16px; */
   padding: 18px;
 }
 
@@ -141,13 +141,13 @@
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 12px 14px;
-  background: #f6f1ed;
+  background: var(--bg);
   outline: none;
 }
 
 .shipping-grid input:focus {
-  border-color: #8f6f60;
-  box-shadow: 0 0 0 3px rgba(143, 111, 96, 0.15);
+  border-color: var(--border);
+  box-shadow: var(--shadow);
 }
 
 .shipping-result {
@@ -158,7 +158,7 @@
 }
 
 .btn-primary:hover {
-  background: #8f6f60;
+  background: var(--accent);
 }
 
 .btn-secondary:hover {
@@ -192,3 +192,5 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* OK */
