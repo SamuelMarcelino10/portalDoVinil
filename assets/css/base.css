@@ -49,11 +49,12 @@ button {
 
 .btn-primary {
   background: var(--botoes);
+  color: #ffff;
 }
 
 .btn-secondary {
   background: var(--accent-2);
-  color: var(--text);
+  color: #ffff;
 } 
 
 .btn-full {

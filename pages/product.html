@@ -53,20 +53,8 @@
           <p class="price">R$ 246,15</p>
           <p class="installments">Em ate 6x R$ 41,025 sem juros</p>
 
-          <div class="quantity-row">
-            <span>Quantidade</span>
-            <div class="quantity-control">
-              <button type="button" id="qtyDown">-</button>
-              <strong id="quantityValue">1</strong>
-              <button type="button" id="qtyUp">+</button>
-            </div>
-            <small id="stockLabel">4 disponivel(is)</small>
-          </div>
 
-          <div class="action-row">
-            <a href="payment.html" class="btn btn-primary">Compre ja</a>
-            <button type="button" class="btn btn-secondary">Adicionar ao carrinho</button>
-          </div>
+
 
           <div class="description-block">
             <h2>Descrição</h2>
@@ -86,33 +74,78 @@
       </section>
 
       <aside class="shipping-box">
-        <h2>Calcular Frete</h2>
-        <div class="shipping-grid">
-          <label>
-            <span>CEP</span>
-            <input id="cepInput" type="text" inputmode="numeric" placeholder="00000-000" />
-          </label>
-          <label>
-            <span>No Residencia</span>
-            <input id="houseInput" type="text" placeholder="12" />
-          </label>
-          <label class="shipping-grid__full">
-            <span>Endereco</span>
-            <input id="addressInput" type="text" placeholder="Rua, avenida, travessa..." />
-          </label>
-          <label class="shipping-grid__full">
-            <span>Bairro</span>
-            <input id="districtInput" type="text" placeholder="Bairro" />
-          </label>
-          <label class="shipping-grid__full">
-            <span>Complemento (Opcional)</span>
-            <input id="complementInput" type="text" placeholder="Apto, bloco, referencia..." />
-          </label>
-        </div>
 
-        <button type="button" class="btn btn-primary btn-full" id="calcShippingBtn">Calcular Frete</button>
-        <p class="shipping-result" id="shippingResult">Informe o CEP para simular o frete.</p>
+          <div class="frete-box">
+            <h3>Calcular Frete</h3>
+            
+            <div class="input-cep">
+              <input type="text" placeholder="00000-000" maxlength="9" id="cep-input" />
+              <button type="button" id="btn-calcular">Calcular</button>
+            </div>
+            
+            <a href="https://buscacepinter.correios.com.br/" target="_blank" class="link-calculo">
+              Não sei meu CEP
+            </a>
+            
+            <div id="resultado-frete" class="hidden">
+              <p>🚚 <strong>Sedex:</strong> R$ 15,90 (2 dias úteis)</p>
+              <p>📦 <strong>PAC:</strong> R$ 9,50 (5 dias úteis)</p>
+            </div>
+
+            <div class="quantity-row">
+              <span>Quantidade</span>
+              <div class="quantity-control">
+                <button type="button" id="qtyDown">-</button>
+                <strong id="quantityValue">1</strong>
+                <button type="button" id="qtyUp">+</button>
+              </div>
+              <small id="stockLabel">4 disponivel(is)</small>
+            </div>
+
+            <div class="botoes-compra">
+              <a href="payment.html" id="btn-compra">Compre ja</a>
+              <button type="button" class="btn-carrinho">Adicionar ao carrinho</button>
+            </div>
+
+          </div>
       </aside>
+    </section>
+
+    <h3>APROVEITE E COMPRE JUNTO</h3>
+
+    <section class="products-grid" aria-label="Produtos em destaque">
+      <a class="product-card" href="pages/product.html">
+        <div class="product-art product-art--queen">
+          <img src="pics/queen-a-night-at-the-opera-lp-removebg-preview.png" alt="Queen - A Night At The Opera">
+        </div>
+        <h2>Queen - A Night At The Opera</h2>
+        <strong>R$ 289,00 no Pix</strong>
+        <span>Ate 3x de R$ 96,33</span>
+      </a>
+      <a class="product-card" href="pages/product.html">
+        <div class="product-art product-art--queen">
+          <img src="pics/queen-a-night-at-the-opera-lp-removebg-preview.png" alt="Queen - A Night At The Opera">
+        </div>
+        <h2>Queen - A Night At The Opera</h2>
+        <strong>R$ 289,00 no Pix</strong>
+        <span>Ate 3x de R$ 96,33</span>
+      </a>
+      <a class="product-card" href="pages/product.html">
+        <div class="product-art product-art--queen">
+          <img src="pics/queen-a-night-at-the-opera-lp-removebg-preview.png" alt="Queen - A Night At The Opera">
+        </div>
+        <h2>Queen - A Night At The Opera</h2>
+        <strong>R$ 289,00 no Pix</strong>
+        <span>Ate 3x de R$ 96,33</span>
+      </a>
+      <a class="product-card" href="pages/product.html">
+        <div class="product-art product-art--queen">
+          <img src="pics/queen-a-night-at-the-opera-lp-removebg-preview.png" alt="Queen - A Night At The Opera">
+        </div>
+        <h2>Queen - A Night At The Opera</h2>
+        <strong>R$ 289,00 no Pix</strong>
+        <span>Ate 3x de R$ 96,33</span>
+      </a>
     </section>
   </main>
 
