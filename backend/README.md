@@ -18,7 +18,8 @@ backend/
 
 ## Rodando localmente
 
-1. Copie `.env.example` para `.env` e preencha com os dados do Supabase.
+1. Peça o arquivo `.env` para o time e coloque na pasta `backend/`.
+   Ele contém as credenciais do Supabase: `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASS`.
 2. Suba o servidor de desenvolvimento do PHP:
 
    ```
