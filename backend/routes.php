@@ -4,6 +4,9 @@
  * As arrow functions (fn) capturam o $pdo automaticamente.
  */
 
+// Status da API (abrir a URL no navegador mostra que esta no ar)
+$router->get('/', fn() => print(json_encode(['api' => 'Portal do Vinil', 'status' => 'ok'])));
+
 // Produtos
 $router->get('/produtos',      fn()   => (new ProductController())->index($pdo));
 $router->get('/produtos/{id}', fn($id) => (new ProductController())->show($pdo, $id));
