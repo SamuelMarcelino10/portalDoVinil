@@ -30,9 +30,21 @@ class AuthController
             return;
         }
 
-        // password_hash embaralha a senha antes de salvar
-        $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
-        $id = User::create($pdo, $nome, $email, $senhaHash);
+        // Uma funcaozinha pra limpar cada campo de endereco (vazio vira null)
+        $opcional = fn(string $campo) => (trim($dados[$campo] ?? '') ?: null);
+
+        // password_hash embaralha a senha antes de salvar.
+        // Nao lemos 'tipo_usuario' do corpo: o servidor decide (sempre 'c').
+        $id = User::create($pdo, [
+            'nome'        => $nome,
+            'email'       => $email,
+            'senha'       => password_hash($senha, PASSWORD_DEFAULT),
+            'estado'      => $opcional('estado'),
+            'cidade'      => $opcional('cidade'),
+            'endereco'    => $opcional('endereco'),
+            'bairro'      => $opcional('bairro'),
+            'complemento' => $opcional('complemento'),
+        ]);
 
         http_response_code(201);
         echo json_encode(['id' => $id, 'nome' => $nome, 'email' => $email]);

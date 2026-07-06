@@ -7,27 +7,45 @@
   <link rel="stylesheet" href="../assets/css/login.css" />
 </head>
 <body class="page-login">
+  <img src="../pics/img-login.svg" alt="" class="login-bg" aria-hidden="true" />
   <main class="login-screen">
-    <section class="login-side login-side--art" aria-hidden="true">
-      <img src="../pics/img-login.svg" alt="" class="login-side__art" />
-      <img src="../pics/logo.svg" alt="Portal do Vinil" class="login-side__logo" />
-    </section>
+    <div class="login-card">
+      <div class="login-card__brand brand">
+        <span class="brand__icon" aria-hidden="true">
+          <img src="../pics/logo.svg" alt="Portal do Vinil" />
+        </span>
+        <span class="brand__text">
+          <strong>Portal</strong>
+          <small>do Vinil</small>
+        </span>
+      </div>
 
-    <section class="login-side login-side--form">
+      <h1 class="login-card__title">Efetue seu Login</h1>
+
       <form class="auth-form" id="loginForm" action="../index.html" method="get">
-        <label>
-          <span>E-mail, CPF ou CNPJ</span>
-          <input type="text" name="user" placeholder="E-mail, CPF ou CNPJ" required />
+        <label class="auth-field">
+          <span>E-mail</span>
+          <input type="text" name="user" placeholder="Digite seu Email" required />
         </label>
 
-        <label>
+        <label class="auth-field auth-field--icon">
           <span>Senha</span>
-          <input type="password" name="password" placeholder="Senha" required />
+          <svg class="auth-field__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.6" />
+            <path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.6" />
+          </svg>
+          <input type="password" name="password" placeholder="Digite sua Senha" required />
         </label>
 
-        <button type="submit" class="btn btn-primary">Entrar</button>
+        <p class="auth-form__error" id="loginErro" role="alert"></p>
+
+        <button type="submit" class="btn btn-primary btn-full">Fazer Login</button>
       </form>
-    </section>
+
+      <p class="login-card__footer">
+        Não possui uma conta? <a href="cadastro.html">Faça o seu Cadastro</a>
+      </p>
+    </div>
   </main>
 
   <script src="../assets/js/app.js"></script>

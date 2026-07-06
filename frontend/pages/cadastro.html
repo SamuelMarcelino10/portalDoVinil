@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal do Vinil | Cadastro</title>
+  <link rel="stylesheet" href="../assets/css/login.css" />
+  <link rel="stylesheet" href="../assets/css/cadastro.css" />
+</head>
+<body class="page-login">
+  <img src="../pics/img-login.svg" alt="" class="login-bg" aria-hidden="true" />
+  <main class="login-screen">
+    <div class="login-card">
+      <div class="login-card__brand brand">
+        <span class="brand__icon" aria-hidden="true">
+          <img src="../pics/logo.svg" alt="Portal do Vinil" />
+        </span>
+        <span class="brand__text">
+          <strong>Portal</strong>
+          <small>do Vinil</small>
+        </span>
+      </div>
+
+      <!-- ============ PASSO 1: e-mail, senha e termos ============ -->
+      <form class="auth-form" id="cadastroStep1">
+        <h1 class="login-card__title">Realize seu Cadastro</h1>
+
+        <label class="auth-field">
+          <span>E-mail</span>
+          <input type="email" name="email" placeholder="Digite seu Email" required />
+        </label>
+
+        <label class="auth-field auth-field--icon">
+          <span>Senha</span>
+          <svg class="auth-field__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.6" />
+            <path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.6" />
+          </svg>
+          <input type="password" name="senha" placeholder="Digite sua Senha" required />
+        </label>
+
+        <label class="auth-field auth-field--icon">
+          <span>Confirmar senha</span>
+          <svg class="auth-field__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" stroke-width="1.6" />
+            <path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.6" />
+          </svg>
+          <input type="password" name="senha2" placeholder="Confirme a sua Senha" required />
+        </label>
+
+        <label class="auth-terms">
+          <input type="checkbox" name="termos" required />
+          <span>Afirmo que li e aceito os termos de uso do site</span>
+        </label>
+
+        <p class="auth-form__error" id="cadastroErro1" role="alert"></p>
+
+        <button type="submit" class="btn btn-primary btn-full">Seguir com o cadastro</button>
+
+        <p class="login-card__footer">
+          Já possui uma conta? <a href="login.html">Faça o seu Login</a>
+        </p>
+      </form>
+
+      <!-- ============ PASSO 2: dados pessoais e endereco ============ -->
+      <form class="auth-form is-hidden" id="cadastroStep2">
+        <h1 class="login-card__title">Finalize o seu Cadastro</h1>
+
+        <label class="auth-field">
+          <span>Nome</span>
+          <input type="text" name="nome" placeholder="Digite seu Nome" required />
+        </label>
+
+        <div class="form-row">
+          <label class="auth-field">
+            <span>Estado</span>
+            <select name="estado" required>
+              <option value="" disabled selected>Estado</option>
+              <option value="AC">AC</option>
+              <option value="AL">AL</option>
+              <option value="AP">AP</option>
+              <option value="AM">AM</option>
+              <option value="BA">BA</option>
+              <option value="CE">CE</option>
+              <option value="DF">DF</option>
+              <option value="ES">ES</option>
+              <option value="GO">GO</option>
+              <option value="MA">MA</option>
+              <option value="MT">MT</option>
+              <option value="MS">MS</option>
+              <option value="MG">MG</option>
+              <option value="PA">PA</option>
+              <option value="PB">PB</option>
+              <option value="PR">PR</option>
+              <option value="PE">PE</option>
+              <option value="PI">PI</option>
+              <option value="RJ">RJ</option>
+              <option value="RN">RN</option>
+              <option value="RS">RS</option>
+              <option value="RO">RO</option>
+              <option value="RR">RR</option>
+              <option value="SC">SC</option>
+              <option value="SP">SP</option>
+              <option value="SE">SE</option>
+              <option value="TO">TO</option>
+            </select>
+          </label>
+
+          <label class="auth-field">
+            <span>Cidade</span>
+            <input type="text" name="cidade" placeholder="Digite a sua cidade" required />
+          </label>
+        </div>
+
+        <label class="auth-field">
+          <span>Endereço</span>
+          <input type="text" name="endereco" placeholder="Digite o seu endereço" required />
+        </label>
+
+        <div class="form-row">
+          <label class="auth-field">
+            <span>Bairro</span>
+            <input type="text" name="bairro" placeholder="Digite o bairro" required />
+          </label>
+
+          <label class="auth-field">
+            <span>Complemento</span>
+            <input type="text" name="complemento" placeholder="Complemento" />
+          </label>
+        </div>
+
+        <p class="auth-form__error" id="cadastroErro2" role="alert"></p>
+
+        <button type="submit" class="btn btn-primary btn-full">Finalizar o cadastro</button>
+
+        <p class="login-card__footer">
+          Já possui uma conta? <a href="login.html">Faça o seu Login</a>
+        </p>
+      </form>
+    </div>
+  </main>
+
+  <script src="../assets/js/app.js"></script>
+</body>
+</html>

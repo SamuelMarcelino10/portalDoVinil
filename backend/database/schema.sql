@@ -8,6 +8,12 @@ CREATE TABLE usuarios (
   senha         TEXT NOT NULL,              -- guarda o hash, nunca a senha real
   tipo_usuario  CHAR(1) NOT NULL DEFAULT 'c'
                 CHECK (tipo_usuario IN ('v', 'c')),  -- v = vendedor, c = cliente
+  -- Endereco (preenchido no passo 2 do cadastro)
+  estado        CHAR(2),
+  cidade        VARCHAR(100),
+  endereco      VARCHAR(200),
+  bairro        VARCHAR(100),
+  complemento   VARCHAR(100),
   criado_em     TIMESTAMP DEFAULT now()
 );
 

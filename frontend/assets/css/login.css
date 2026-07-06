@@ -1,95 +1,199 @@
 @import url("base.css");
 
+/* Fundo: a imagem dos discos ocupando a tela inteira */
 .page-login {
   background: #1f1d1b;
 }
 
-.login-screen {
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-}
-
-.login-side {
-  padding: 56px;
-}
-
-/* --- Lado esquerdo: arte decorativa --- */
-.login-side--art {
-  position: relative;
-  overflow: hidden;
-  background: var(--bg);
-}
-
-.login-side__art {
-  position: absolute;
+/* Imagem de fundo cobrindo a tela toda, atras de tudo */
+.login-bg {
+  position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
+  z-index: 0;
 }
 
-.login-side__logo {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: min(44vw, 320px);
-  transform: translate(-50%, -50%);
-  display: block;
-}
-/* PIM */
-/* --- Lado direito: formulário --- */
-.login-side--form {
+.login-screen {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
   display: grid;
-  align-content: center;
-  background: var(--bg);
-  justify-items: center;
-  padding: 28px;
+  place-items: center;
+  padding: 32px;
 }
 
+/* --- Card central --- */
+.login-card {
+  position: relative;
+  width: min(100%, 440px);
+  padding: 44px 40px;
+  background: #fffaf3;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: var(--shadow);
+}
+
+/* Borda pontilhada interna: bolinhas redondas espacadas (efeito "cupom") */
+.login-card::before {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  --dot: rgba(88, 63, 50, 0.4); /* cor da bolinha */
+  --gap: 9px;                    /* distancia de uma bolinha para outra */
+  --thick: 3px;                  /* espessura da faixa de bolinhas */
+  background-image:
+    radial-gradient(circle, var(--dot) 40%, transparent 42%), /* topo */
+    radial-gradient(circle, var(--dot) 40%, transparent 42%), /* base */
+    radial-gradient(circle, var(--dot) 40%, transparent 42%), /* esquerda */
+    radial-gradient(circle, var(--dot) 40%, transparent 42%); /* direita */
+  background-size:
+    var(--gap) var(--thick),
+    var(--gap) var(--thick),
+    var(--thick) var(--gap),
+    var(--thick) var(--gap);
+  background-position: left top, left bottom, left top, right top;
+  background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+  pointer-events: none;
+}
+
+/* Deixa o conteudo acima da borda pontilhada */
+.login-card > * {
+  position: relative;
+}
+
+/* --- Marca (mesma logo das outras telas, centralizada e com texto escuro) --- */
+.login-card__brand {
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.login-card__brand .brand__icon {
+  width: 52px;
+  height: 52px;
+  margin-right: 4px;
+}
+
+.login-card__brand .brand__icon img {
+  width: 100%;
+  height: 100%;
+}
+
+/* Sobrescreve a cor creme (usada no header escuro) por texto escuro */
+.login-card__brand .brand__text strong,
+.login-card__brand .brand__text small {
+  color: var(--text);
+}
+
+.login-card__brand .brand__text strong {
+  font-size: 1.5rem;
+}
+
+.login-card__brand .brand__text small {
+  font-size: 1.3rem;
+}
+
+/* --- Titulo --- */
+.login-card__title {
+  margin: 0 0 24px;
+  font-size: 1.7rem;
+  font-weight: 500;
+  color: var(--panel);
+}
+
+/* --- Formulario --- */
 .auth-form {
   display: grid;
-  gap: 18px;
-  width: min(100%, 350px);
+  gap: 16px;
+  width: 100%;
 }
 
-.auth-form label {
+.auth-field {
+  position: relative;
   display: grid;
-  gap: 6px;
+}
+
+/* Rotulo escondido (fica so pra leitores de tela) */
+.auth-field > span {
+  display: none;
 }
 
 .auth-form input {
   width: 100%;
+  height: 52px;
+  padding: 0 14px;
   border: 1px solid var(--border);
-  border-radius: 10px;
-  height: 38px;
-  padding: 0 12px;
-  background: var(--muted);
+  border-radius: 4px;
+  background: #fffaf3;
+  color: var(--text);
   outline: none;
 }
 
+.auth-form input::placeholder {
+  color: rgba(88, 63, 50, 0.5);
+}
+
 .auth-form input:focus {
-  border-color: var(--border);
-  box-shadow: 0 0 0 3px rgba(143, 111, 96, 0.15);
+  border-color: var(--botoes);
+  box-shadow: 0 0 0 3px rgba(190, 76, 84, 0.15);
 }
 
-.auth-form span {
-  display: none;
+/* Campo com icone (cadeado): abre espaco a esquerda pro icone */
+.auth-field--icon input {
+  padding-left: 44px;
 }
 
-.auth-form button {
-  width: 150px;
-  justify-self: center;
+.auth-field__icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: var(--panel);
+  pointer-events: none;
+}
+
+/* Mensagem de erro/sucesso (vazia por padrao, aparece so quando ha texto) */
+.auth-form__error {
+  margin: 0;
+  min-height: 1.2em;
+  color: var(--botoes);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.auth-form__error.is-ok {
+  color: #2e7d32;
+}
+
+/* --- Botao --- */
+.auth-form .btn {
+  height: 52px;
+  margin-top: 6px;
+  border: none;
+  border-radius: 4px;
+  font-size: 1.05rem;
+}
+
+/* --- Rodape --- */
+.login-card__footer {
+  margin: 22px 0 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.login-card__footer a {
+  color: var(--botoes);
+  font-weight: 700;
+  text-decoration: underline;
 }
 
 /* --- Responsivo --- */
-@media (max-width: 1100px) {
-  .login-screen {
-    grid-template-columns: 1fr;
-  }
-
-  .login-side {
-    padding: 28px;
+@media (max-width: 480px) {
+  .login-card {
+    padding: 36px 24px;
   }
 }

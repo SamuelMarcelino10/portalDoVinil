@@ -36,6 +36,14 @@
   gap: 22px;
 }
 
+/* Mensagem de carregando / erro / lista vazia (ocupa a linha inteira) */
+.grid-message {
+  grid-column: 1 / -1;
+  padding: 24px 0;
+  text-align: center;
+  opacity: 0.75;
+}
+
 .product-card {
   background: var(--muted);
   padding: 12px;

@@ -14,18 +14,28 @@ class User
     }
 
     // Cria um novo usuário. A senha já deve chegar aqui como hash.
-    public static function create(PDO $pdo, string $nome, string $email, string $senhaHash, string $tipo = 'c'): int
+    // Recebe um array com: nome, email, senha (hash) e os campos de endereço.
+    public static function create(PDO $pdo, array $dados): int
     {
+        // IMPORTANTE: tipo_usuario NÃO vem da interface. O servidor grava
+        // sempre 'c' (cliente) aqui, então o usuário não pode se tornar vendedor
+        // pela tela de cadastro.
         $stmt = $pdo->prepare(
-            "INSERT INTO usuarios (nome, email, senha, tipo_usuario)
-             VALUES (:nome, :email, :senha, :tipo)
+            "INSERT INTO usuarios
+                (nome, email, senha, tipo_usuario, estado, cidade, endereco, bairro, complemento)
+             VALUES
+                (:nome, :email, :senha, 'c', :estado, :cidade, :endereco, :bairro, :complemento)
              RETURNING id"
         );
         $stmt->execute([
-            'nome'  => $nome,
-            'email' => $email,
-            'senha' => $senhaHash,
-            'tipo'  => $tipo,
+            'nome'        => $dados['nome'],
+            'email'       => $dados['email'],
+            'senha'       => $dados['senha'],
+            'estado'      => $dados['estado'] ?? null,
+            'cidade'      => $dados['cidade'] ?? null,
+            'endereco'    => $dados['endereco'] ?? null,
+            'bairro'      => $dados['bairro'] ?? null,
+            'complemento' => $dados['complemento'] ?? null,
         ]);
         return (int) $stmt->fetchColumn();
     }
