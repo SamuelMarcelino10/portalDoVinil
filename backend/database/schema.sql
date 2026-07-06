@@ -29,6 +29,16 @@ CREATE TABLE produtos (
   criado_em  TIMESTAMP DEFAULT now()
 );
 
+-- Carrinho: cada linha e um produto no carrinho de um usuario
+CREATE TABLE carrinho (
+  id          SERIAL PRIMARY KEY,
+  usuario_id  INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+  produto_id  INTEGER NOT NULL REFERENCES produtos(id) ON DELETE CASCADE,
+  quantidade  INTEGER NOT NULL DEFAULT 1,
+  criado_em   TIMESTAMP DEFAULT now(),
+  UNIQUE (usuario_id, produto_id)  -- 1 linha por produto (adicionar de novo soma)
+);
+
 -- Alguns produtos de exemplo pra testar a API já com dados
 INSERT INTO produtos (nome, descricao, preco, tipo, artista, estoque, imagem) VALUES
   ('A Night at the Opera', 'LP clássico de 1975', 289.00, 'vinil', 'Queen', 4, 'queen-a-night-at-the-opera-lp-removebg-preview.png'),

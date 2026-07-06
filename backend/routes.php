@@ -15,5 +15,8 @@ $router->get('/produtos/{id}', fn($id) => (new ProductController())->show($pdo, 
 $router->post('/register', fn() => (new AuthController())->register($pdo));
 $router->post('/login',    fn() => (new AuthController())->login($pdo));
 
-// Carrinho (esqueleto)
-$router->get('/cart', fn() => (new CartController())->index($pdo));
+// Carrinho
+$router->get('/cart',         fn()   => (new CartController())->index($pdo));   // ?usuario_id=X
+$router->post('/cart',        fn()   => (new CartController())->add($pdo));
+$router->put('/cart/{id}',    fn($id) => (new CartController())->update($pdo, $id));
+$router->delete('/cart/{id}', fn($id) => (new CartController())->remove($pdo, $id)); // ?usuario_id=X

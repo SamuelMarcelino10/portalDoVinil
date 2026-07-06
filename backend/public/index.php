@@ -11,6 +11,7 @@ require __DIR__ . '/../config/database.php';
 require __DIR__ . '/../core/Router.php';
 require __DIR__ . '/../models/Product.php';
 require __DIR__ . '/../models/User.php';
+require __DIR__ . '/../models/Cart.php';
 require __DIR__ . '/../controllers/ProductController.php';
 require __DIR__ . '/../controllers/AuthController.php';
 require __DIR__ . '/../controllers/CartController.php';

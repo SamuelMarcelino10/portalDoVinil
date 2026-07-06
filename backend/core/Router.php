@@ -17,6 +17,16 @@ class Router
         $this->rotas[] = ['POST', $caminho, $acao];
     }
 
+    public function put(string $caminho, callable $acao): void
+    {
+        $this->rotas[] = ['PUT', $caminho, $acao];
+    }
+
+    public function delete(string $caminho, callable $acao): void
+    {
+        $this->rotas[] = ['DELETE', $caminho, $acao];
+    }
+
     public function dispatch(string $metodo, string $uri): void
     {
         // remove a query string (?q=...) e barras finais

@@ -206,56 +206,171 @@ if (searchInput && priceMin && priceMax) {
   applyFilters();
 }
 
-if (document.getElementById("quantityValue") && document.getElementById("qtyDown") && document.getElementById("qtyUp")) {
+// --- Pagina de produto: busca o produto pelo id da URL e preenche a tela ---
+const produtoNome = document.getElementById("produtoNome");
+
+if (produtoNome) {
+  // Formata um numero como preco em Real com centavos (ex: 289 -> "R$ 289,00")
+  const emReais = (valor) =>
+    new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(valor);
+
+  const id = urlParams.get("id");
+
+  const elImagem = document.getElementById("produtoImagem");
+  const elPreco = document.getElementById("produtoPreco");
+  const elParcelas = document.getElementById("produtoParcelas");
+  const elDescricao = document.getElementById("produtoDescricao");
+  const elDetalhes = document.getElementById("produtoDetalhes");
+
+  // --- Controle de quantidade (usa o estoque real depois do fetch) ---
   const quantityValue = document.getElementById("quantityValue");
   const qtyDown = document.getElementById("qtyDown");
   const qtyUp = document.getElementById("qtyUp");
   const stockLabel = document.getElementById("stockLabel");
-  let quantity = 1;
-  const stock = 4;
+  let quantidade = 1;
+  let estoque = 1;
 
-  function renderQuantity() {
-    quantityValue.textContent = quantity;
-    stockLabel.textContent = `${stock - quantity} disponível(is)`;
-    qtyDown.disabled = quantity <= 1;
-    qtyUp.disabled = quantity >= stock;
+  function renderQuantidade() {
+    quantityValue.textContent = quantidade;
+    stockLabel.textContent = `${estoque - quantidade} disponível(is)`;
+    qtyDown.disabled = quantidade <= 1;
+    qtyUp.disabled = quantidade >= estoque;
+  }
+  qtyDown.addEventListener("click", () => {
+    quantidade = Math.max(1, quantidade - 1);
+    renderQuantidade();
+  });
+  qtyUp.addEventListener("click", () => {
+    quantidade = Math.min(estoque, quantidade + 1);
+    renderQuantidade();
+  });
+
+  // --- Frete: o botao "Calcular" so revela o resultado (valores de exemplo) ---
+  const btnCalcular = document.getElementById("btn-calcular");
+  const cepInput = document.getElementById("cep-input");
+  const resultadoFrete = document.getElementById("resultado-frete");
+  if (resultadoFrete) resultadoFrete.style.display = "none";
+  if (btnCalcular) {
+    btnCalcular.addEventListener("click", () => {
+      const cep = cepInput.value.replace(/\D/g, "");
+      if (cep.length < 8) {
+        cepInput.focus();
+        return;
+      }
+      resultadoFrete.style.display = "block";
+    });
   }
 
-  qtyDown.addEventListener("click", () => {
-    quantity = Math.max(1, quantity - 1);
-    renderQuantity();
-  });
+  // --- Botao "Adicionar ao carrinho" ---
+  const btnCarrinho = document.getElementById("btn-carrinho");
+  if (btnCarrinho) {
+    btnCarrinho.addEventListener("click", async () => {
+      // Precisa estar logado (o carrinho pertence a um usuario)
+      const usuario = JSON.parse(localStorage.getItem("usuario") || "null");
+      if (!usuario) {
+        alert("Você precisa estar logado para adicionar ao carrinho.");
+        window.location.href = "login.html";
+        return;
+      }
 
-  qtyUp.addEventListener("click", () => {
-    quantity = Math.min(stock, quantity + 1);
-    renderQuantity();
-  });
+      const textoOriginal = btnCarrinho.textContent;
+      btnCarrinho.disabled = true;
+      btnCarrinho.textContent = "Adicionando...";
 
-  renderQuantity();
+      try {
+        const resposta = await fetch(`${API_URL}/cart`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            usuario_id: usuario.id,
+            produto_id: Number(id),
+            quantidade: quantidade,
+          }),
+        });
 
-  const cepInput = document.getElementById("cepInput");
-  const houseInput = document.getElementById("houseInput");
-  const addressInput = document.getElementById("addressInput");
-  const districtInput = document.getElementById("districtInput");
-  const complementInput = document.getElementById("complementInput");
-  const calcShippingBtn = document.getElementById("calcShippingBtn");
-  const shippingResult = document.getElementById("shippingResult");
+        if (!resposta.ok) throw new Error();
 
-  calcShippingBtn.addEventListener("click", () => {
-    const cepDigits = cepInput.value.replace(/\D/g, "");
-    const house = houseInput.value.trim();
-    const address = addressInput.value.trim();
-    const district = districtInput.value.trim();
-    const complement = complementInput.value.trim();
+        // Feedback rapido de sucesso
+        btnCarrinho.textContent = "Adicionado ✓";
+        setTimeout(() => {
+          btnCarrinho.textContent = textoOriginal;
+          btnCarrinho.disabled = false;
+        }, 1500);
+      } catch {
+        btnCarrinho.textContent = textoOriginal;
+        btnCarrinho.disabled = false;
+        alert("Não foi possível adicionar ao carrinho. Tente de novo.");
+      }
+    });
+  }
 
-    if (cepDigits.length < 8) {
-      shippingResult.textContent = "Digite um CEP válido para calcular o frete.";
-      return;
-    }
+  // Preenche a tela com os dados do produto vindo da API
+  function mostrarProduto(p) {
+    document.title = `Portal do Vinil | ${p.nome}`;
+    produtoNome.textContent = p.artista ? `${p.artista} - ${p.nome}` : p.nome;
 
-    const basePrice = 18.9 + quantity * 2.5;
-    shippingResult.textContent = `Frete estimado para ${cepDigits.slice(0, 5)}-${cepDigits.slice(5)}: ${formatCurrency(basePrice)}. ${address ? `Entrega em ${address}${house ? `, ${house}` : ""}${district ? ` - ${district}` : ""}${complement ? ` (${complement})` : ""}.` : ""}`;
-  });
+    const valor = Number(p.preco);
+    elPreco.textContent = emReais(valor);
+    elParcelas.textContent = `Em até 6x de ${emReais(valor / 6)} sem juros`;
+
+    elImagem.src = p.imagem ? `../pics/${p.imagem}` : "../pics/logo.svg";
+    elImagem.alt = p.nome;
+    elImagem.onerror = () => (elImagem.src = "../pics/logo.svg");
+
+    elDescricao.textContent = p.descricao || "Sem descrição.";
+    elDetalhes.innerHTML = `
+      <li>Artista: ${p.artista || "-"}</li>
+      <li>Tipo: ${p.tipo}</li>
+      <li>Em estoque: ${p.estoque} unidade(s)</li>
+    `;
+
+    estoque = Math.max(1, Number(p.estoque) || 1);
+    renderQuantidade();
+  }
+
+  if (!id) {
+    produtoNome.textContent = "Produto não informado.";
+  } else {
+    fetch(`${API_URL}/produtos/${id}`)
+      .then((r) => {
+        if (r.status === 404) throw new Error("nao-encontrado");
+        if (!r.ok) throw new Error("erro");
+        return r.json();
+      })
+      .then(mostrarProduto)
+      .catch((e) => {
+        produtoNome.textContent =
+          e.message === "nao-encontrado"
+            ? "Produto não encontrado."
+            : "Não foi possível carregar o produto.";
+      });
+  }
+
+  // --- "Aproveite e compre junto": mostra outros produtos da API ---
+  const compreJunto = document.getElementById("compreJunto");
+  if (compreJunto) {
+    fetch(`${API_URL}/produtos`)
+      .then((r) => r.json())
+      .then((produtos) => {
+        const outros = produtos.filter((p) => String(p.id) !== String(id)).slice(0, 4);
+        compreJunto.innerHTML = outros
+          .map((p) => {
+            const titulo = p.artista ? `${p.artista} - ${p.nome}` : p.nome;
+            const valor = Number(p.preco);
+            return `
+              <a class="product-card" href="product.html?id=${p.id}">
+                <div class="product-art">
+                  <img src="../pics/${p.imagem}" alt="${titulo}" onerror="this.src='../pics/logo.svg'">
+                </div>
+                <h2>${titulo}</h2>
+                <strong>${emReais(valor)} no Pix</strong>
+                <span>Até 3x de ${emReais(valor / 3)}</span>
+              </a>`;
+          })
+          .join("");
+      })
+      .catch(() => (compreJunto.innerHTML = ""));
+  }
 }
 
 // --- Home: busca os produtos na API e monta os cards ---
