@@ -26,6 +26,7 @@ CREATE TABLE produtos (
   artista    TEXT,
   estoque    INTEGER NOT NULL DEFAULT 0,
   imagem     TEXT,                          -- nome do arquivo ou URL da capa
+  generos    TEXT,                          -- generos separados por virgula (ex: "Rock, Arena Rock")
   criado_em  TIMESTAMP DEFAULT now()
 );
 

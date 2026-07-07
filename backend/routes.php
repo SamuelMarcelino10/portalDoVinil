@@ -10,6 +10,7 @@ $router->get('/', fn() => print(json_encode(['api' => 'Portal do Vinil', 'status
 // Produtos
 $router->get('/produtos',      fn()   => (new ProductController())->index($pdo));
 $router->get('/produtos/{id}', fn($id) => (new ProductController())->show($pdo, $id));
+$router->post('/produtos',     fn()   => (new ProductController())->create($pdo)); // cadastro (vendedor)
 
 // Autenticação
 $router->post('/register', fn() => (new AuthController())->register($pdo));

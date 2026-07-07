@@ -18,4 +18,24 @@ class Product
         $produto = $stmt->fetch();
         return $produto ?: null;
     }
+
+    // Cria um produto novo e devolve o id gerado
+    public static function create(PDO $pdo, array $d): int
+    {
+        $sql = "INSERT INTO produtos (nome, descricao, preco, tipo, artista, estoque, imagem, generos)
+                VALUES (:nome, :descricao, :preco, :tipo, :artista, :estoque, :imagem, :generos)
+                RETURNING id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([
+            'nome'      => $d['nome'],
+            'descricao' => $d['descricao'],
+            'preco'     => $d['preco'],
+            'tipo'      => $d['tipo'],
+            'artista'   => $d['artista'],
+            'estoque'   => $d['estoque'],
+            'imagem'    => $d['imagem'],
+            'generos'   => $d['generos'],
+        ]);
+        return (int) $stmt->fetchColumn();
+    }
 }

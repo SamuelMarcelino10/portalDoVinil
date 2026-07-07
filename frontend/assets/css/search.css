@@ -33,6 +33,41 @@
   gap: 22px;
 }
 
+/* Coluna da direita (nao deixa a grade estourar) */
+.search-content {
+  min-width: 0;
+}
+
+/* Cada bloco do filtro, separado por linha pontilhada */
+.filters__section {
+  padding: 14px 0;
+  border-top: 1px dotted var(--border);
+}
+
+.filters__opcoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+}
+
+.filtro-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.filtro-check input {
+  accent-color: #8d6f61;
+}
+
+.filtro-check span {
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: var(--muted);
+  font-size: 0.85rem;
+}
+
 .filters {
   background: var(--bg);
   padding: 18px;
@@ -45,13 +80,32 @@
   font-weight: 500;
 }
 
+/* Area dos filtros ativos (uma etiqueta clicavel por filtro) */
+.filters__ativos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 6px;
+}
+
+.filters__ativos:empty {
+  margin: 0;
+}
+
 .filters__chip {
   display: inline-flex;
-  margin: 12px 0 18px;
-  padding: 5px 9px;
+  align-items: center;
+  padding: 5px 10px;
+  border: 0;
   border-radius: 8px;
   background: var(--soft);
+  color: var(--text);
   font-size: 0.84rem;
+  cursor: pointer;
+}
+
+.filters__chip:hover {
+  background: var(--muted);
 }
 
 .range-group {

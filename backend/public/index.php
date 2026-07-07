@@ -9,6 +9,7 @@ require __DIR__ . '/../config/database.php';
 
 // 2. Carrega as classes (MVC simples, sem autoload)
 require __DIR__ . '/../core/Router.php';
+require __DIR__ . '/../core/Storage.php';
 require __DIR__ . '/../models/Product.php';
 require __DIR__ . '/../models/User.php';
 require __DIR__ . '/../models/Cart.php';

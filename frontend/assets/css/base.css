@@ -430,12 +430,6 @@ button {
   gap: 12px;
 }
 
-.produto-form__linha-generos {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: 12px;
-}
-
 /* Caixa com as etiquetas de genero */
 .genero-chips {
   display: flex;
@@ -475,8 +469,7 @@ button {
 
 @media (max-width: 720px) {
   .produto-form__topo,
-  .produto-form__linha3,
-  .produto-form__linha-generos {
+  .produto-form__linha3 {
     grid-template-columns: 1fr;
   }
 }

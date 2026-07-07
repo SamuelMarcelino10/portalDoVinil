@@ -90,6 +90,15 @@ if (headerActions) {
 // Endereco do backend (API PHP no Render) - usado no login e no cadastro
 const API_URL = "https://portaldovinil.onrender.com";
 
+// Caminho certo da capa: se for URL completa (Storage) usa direto;
+// se for so um nome de arquivo (produtos antigos) procura na pasta /pics.
+// "base" e "" na home e "../" nas paginas dentro de /pages.
+function urlImagem(imagem, base = "") {
+  if (!imagem) return `${base}pics/logo.svg`;
+  if (/^https?:\/\//i.test(imagem)) return imagem;
+  return `${base}pics/${imagem}`;
+}
+
 const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
@@ -221,63 +230,6 @@ if (cadastroStep1 && cadastroStep2) {
       botao.textContent = "Finalizar o cadastro";
     }
   });
-}
-
-function formatCurrency(value) {
-  return new Intl.NumberFormat("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-    maximumFractionDigits: 0,
-  }).format(value);
-}
-
-function applyFilters() {
-  if (!searchInput || !priceMin || !priceMax || !priceMinLabel || !priceMaxLabel || !filterCount || !resultCards.length) {
-    return;
-  }
-
-  const query = searchInput.value.trim().toLowerCase();
-  const min = Number(priceMin.value);
-  const max = Number(priceMax.value);
-  const activeGenres = [...genreButtons]
-    .filter((button) => button.classList.contains("is-active"))
-    .map((button) => button.dataset.genre);
-
-  priceMinLabel.textContent = min === 0 ? "Qualquer valor" : `A partir de ${formatCurrency(min)}`;
-  priceMaxLabel.textContent = `Até ${formatCurrency(max)}`;
-  filterCount.textContent = `(${activeGenres.length || 1})`;
-
-  resultCards.forEach((card) => {
-    const title = card.dataset.title.toLowerCase();
-    const genre = card.dataset.genre;
-    const price = Number(card.dataset.price);
-
-    const matchesQuery = title.includes(query);
-    const matchesPrice = price >= min && price <= max;
-    const matchesGenre = activeGenres.length === 0 || activeGenres.includes(genre);
-
-    card.classList.toggle("is-hidden", !(matchesQuery && matchesPrice && matchesGenre));
-  });
-}
-
-if (searchInput && priceMin && priceMax) {
-  genreButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      if (button.dataset.genre === "Rock" && button.classList.contains("is-active")) {
-        button.classList.remove("is-active");
-      } else {
-        button.classList.toggle("is-active");
-      }
-
-      applyFilters();
-    });
-  });
-
-  [searchInput, priceMin, priceMax].forEach((field) => {
-    field.addEventListener("input", applyFilters);
-  });
-
-  applyFilters();
 }
 
 // --- Pagina de produto: busca o produto pelo id da URL e preenche a tela ---
@@ -417,7 +369,7 @@ if (produtoNome) {
     elPreco.textContent = emReais(valor);
     elParcelas.textContent = `Em até 6x de ${emReais(valor / 6)} sem juros`;
 
-    elImagem.src = p.imagem ? `../pics/${p.imagem}` : "../pics/logo.svg";
+    elImagem.src = urlImagem(p.imagem, "../");
     elImagem.alt = p.nome;
     elImagem.onerror = () => (elImagem.src = "../pics/logo.svg");
 
@@ -464,7 +416,7 @@ if (produtoNome) {
             return `
               <a class="product-card" href="product.html?id=${p.id}">
                 <div class="product-art">
-                  <img src="../pics/${p.imagem}" alt="${titulo}" onerror="this.src='../pics/logo.svg'">
+                  <img src="${urlImagem(p.imagem, "../")}" alt="${titulo}" onerror="this.src='../pics/logo.svg'">
                 </div>
                 <h2>${titulo}</h2>
                 <strong>${emReais(valor)} no Pix</strong>
@@ -504,7 +456,7 @@ if (productsGrid) {
         return `
           <a class="product-card" href="pages/product.html?id=${produto.id}">
             <div class="product-art">
-              <img src="pics/${produto.imagem}" alt="${titulo}" onerror="this.src='pics/logo.svg'">
+              <img src="${urlImagem(produto.imagem)}" alt="${titulo}" onerror="this.src='pics/logo.svg'">
             </div>
             <h2>${titulo}</h2>
             <strong>${precoBRL(preco)} no Pix</strong>
@@ -567,7 +519,7 @@ if (cartItems) {
         const linha = Number(i.preco) * i.quantidade;
         return `
           <div class="pay-cart__item" data-id="${i.id}" data-max="${i.estoque}">
-            <img src="../pics/${i.imagem}" alt="${titulo}" onerror="this.src='../pics/logo.svg'">
+            <img src="${urlImagem(i.imagem, "../")}" alt="${titulo}" onerror="this.src='../pics/logo.svg'">
             <span class="pay-cart__nome">${titulo}</span>
             <div class="pay-qty">
               <button type="button" data-acao="menos" ${i.quantidade <= 1 ? "disabled" : ""}>-</button>
@@ -780,7 +732,7 @@ if (cartItems) {
   carregarCarrinho();
 }
 
-// --- Pagina de busca: resultados dinamicos por categoria ou por texto ---
+// --- Pagina de busca: resultados + filtros (preco, genero, estoque...) ---
 const searchResults = document.getElementById("searchResults");
 
 if (searchResults) {
@@ -791,6 +743,18 @@ if (searchResults) {
   const emReaisBusca = (v) =>
     new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v);
 
+  const filtrosAtivos = document.getElementById("filtrosAtivos");
+  const generoFiltros = document.getElementById("generoFiltros");
+
+  // Todos os generos possiveis (mesma lista da tela de cadastro de produto)
+  const GENEROS = [
+    "Rock", "Pop", "Pop Rock", "Rock Progressivo", "Arena Rock", "Metal",
+    "Indie", "Jazz", "Blues", "MPB", "Samba", "Hip Hop", "Eletrônica",
+    "Clássica", "Reggae", "Country",
+  ];
+
+  let todos = []; // lista completa vinda da API
+
   // Monta o card de um produto
   function cardBusca(p) {
     const titulo = p.artista ? `${p.artista} - ${p.nome}` : p.nome;
@@ -798,7 +762,7 @@ if (searchResults) {
     return `
       <a class="result-card" href="product.html?id=${p.id}">
         <div class="product-art">
-          <img src="../pics/${p.imagem}" alt="${titulo}" onerror="this.src='../pics/logo.svg'">
+          <img src="${urlImagem(p.imagem, "../")}" alt="${titulo}" onerror="this.src='../pics/logo.svg'">
         </div>
         <h2>${titulo}</h2>
         <strong>${emReaisBusca(preco)} no Pix</strong>
@@ -819,29 +783,100 @@ if (searchResults) {
     else searchTitle.textContent = titulos[cat] || "Todos os produtos";
   }
 
-  function mostrar(produtos) {
-    let lista = produtos;
+  // Quebra "Rock, Arena Rock" numa lista limpa ["Rock", "Arena Rock"]
+  function listaGeneros(p) {
+    return (p.generos || "")
+      .split(",")
+      .map((g) => g.trim())
+      .filter(Boolean);
+  }
 
-    // 1) Se o usuario digitou algo na busca, filtra por nome/artista
-    if (termo) {
-      lista = lista.filter((p) =>
-        `${p.artista || ""} ${p.nome}`.toLowerCase().includes(termo)
-      );
+  // Valores marcados de um tipo de filtro (genero, selo, oferta, estoque)
+  function marcados(tipo) {
+    return [...document.querySelectorAll(`.filters input[data-filtro='${tipo}']:checked`)].map(
+      (c) => c.value
+    );
+  }
+
+  function atualizarLabelsPreco() {
+    const min = Number(priceMin.value);
+    const max = Number(priceMax.value);
+    priceMinLabel.textContent = min === 0 ? "Qualquer valor" : `A partir de ${emReaisBusca(min)}`;
+    priceMaxLabel.textContent = `Até ${emReaisBusca(max)}`;
+  }
+
+  // Monta as etiquetas de "filtros ativos" e atualiza o contador "Filtros (N)"
+  function renderChips() {
+    const chips = [];
+
+    // preco: so vira filtro quando saiu do intervalo cheio
+    const min = Number(priceMin.value);
+    const max = Number(priceMax.value);
+    const teto = Number(priceMax.max);
+    if (min > 0 || max < teto) {
+      const texto =
+        min > 0 ? `${emReaisBusca(min)} – ${emReaisBusca(max)}` : `Até ${emReaisBusca(max)}`;
+      chips.push({ tipo: "preco", label: texto });
     }
 
-    // 2) Filtro/ordenacao por categoria
+    // um chip por genero marcado
+    marcados("genero").forEach((g) => chips.push({ tipo: "genero", valor: g, label: g }));
+
+    // estoque
+    if (marcados("estoque").length) chips.push({ tipo: "estoque", label: "Em estoque" });
+
+    if (filtrosAtivos) {
+      filtrosAtivos.innerHTML = chips
+        .map(
+          (c) =>
+            `<button type="button" class="filters__chip" data-tipo="${c.tipo}" data-valor="${c.valor || ""}">× ${c.label}</button>`
+        )
+        .join("");
+    }
+    if (filterCount) filterCount.textContent = `(${chips.length})`;
+  }
+
+  function aplicar() {
+    let lista = todos;
+
+    // texto digitado na busca (nome/artista)
+    if (termo) {
+      lista = lista.filter((p) => `${p.artista || ""} ${p.nome}`.toLowerCase().includes(termo));
+    }
+
+    // categoria (tipo do produto)
     if (cat === "vinil" || cat === "vitrola" || cat === "cd") {
       lista = lista.filter((p) => p.tipo === cat);
-    } else if (cat === "ofertas") {
-      lista = [...lista].sort((a, b) => Number(a.preco) - Number(b.preco));
     }
+
+    // preco (barras min/max)
+    const min = Number(priceMin.value);
+    const max = Number(priceMax.value);
+    lista = lista.filter((p) => Number(p.preco) >= min && Number(p.preco) <= max);
+
+    // genero (dado real do banco)
+    const generos = marcados("genero");
+    if (generos.length) {
+      lista = lista.filter((p) => {
+        const meus = listaGeneros(p);
+        return generos.some((g) => meus.includes(g));
+      });
+    }
+
+    // estoque: mostra so o que tem estoque > 0
+    if (marcados("estoque").length) lista = lista.filter((p) => Number(p.estoque) > 0);
+
+    // "Ofertas": ordena do mais barato pro mais caro
+    if (cat === "ofertas") lista = [...lista].sort((a, b) => Number(a.preco) - Number(b.preco));
+
+    renderChips();
 
     if (!lista.length) {
       searchResults.innerHTML = '<p class="grid-message">Nenhum produto encontrado.</p>';
       return;
     }
 
-    // 3) "Artistas": agrupa os produtos por artista, um bloco pra cada
+    // "Artistas": agrupa os produtos por artista, um bloco pra cada
     if (cat === "artistas") {
       const grupos = {};
       lista.forEach((p) => {
@@ -866,12 +901,70 @@ if (searchResults) {
     searchResults.innerHTML = `<div class="results">${lista.map(cardBusca).join("")}</div>`;
   }
 
+  // Cria os checkboxes com TODOS os generos possiveis
+  function montarFiltroGeneros() {
+    if (!generoFiltros) return;
+    generoFiltros.innerHTML = GENEROS.map(
+      (g) =>
+        `<label class="filtro-check"><input type="checkbox" data-filtro="genero" value="${g}" /><span>${g}</span></label>`
+    ).join("");
+  }
+
+  // --- Liga os eventos dos filtros ---
+  [priceMin, priceMax].forEach((s) =>
+    s.addEventListener("input", () => {
+      atualizarLabelsPreco();
+      aplicar();
+    })
+  );
+
+  // Um so listener no aside pega qualquer checkbox (inclusive os de genero criados depois)
+  document.querySelector(".filters").addEventListener("change", (e) => {
+    if (e.target.matches("input[type='checkbox']")) aplicar();
+  });
+
+  // Clique no × de uma etiqueta remove aquele filtro especifico
+  if (filtrosAtivos) {
+    filtrosAtivos.addEventListener("click", (e) => {
+      const chip = e.target.closest(".filters__chip");
+      if (!chip) return;
+
+      if (chip.dataset.tipo === "preco") {
+        priceMin.value = 0;
+        priceMax.value = priceMax.max;
+        atualizarLabelsPreco();
+      } else if (chip.dataset.tipo === "genero") {
+        const box = document.querySelector(
+          `.filters input[data-filtro='genero'][value="${chip.dataset.valor}"]`
+        );
+        if (box) box.checked = false;
+      } else if (chip.dataset.tipo === "estoque") {
+        const box = document.querySelector(".filters input[data-filtro='estoque']");
+        if (box) box.checked = false;
+      }
+      aplicar();
+    });
+  }
+
   fetch(`${API_URL}/produtos`)
     .then((r) => {
       if (!r.ok) throw new Error();
       return r.json();
     })
-    .then(mostrar)
+    .then((produtos) => {
+      todos = produtos;
+
+      // Ajusta o teto das barras de preco pro maior preco real do catalogo
+      const maior = produtos.reduce((m, p) => Math.max(m, Number(p.preco)), 0);
+      const teto = Math.max(50, Math.ceil(maior / 10) * 10);
+      [priceMin, priceMax].forEach((s) => (s.max = teto));
+      priceMin.value = 0;
+      priceMax.value = teto;
+
+      montarFiltroGeneros();
+      atualizarLabelsPreco();
+      aplicar();
+    })
     .catch(() => {
       searchResults.innerHTML =
         '<p class="grid-message">Não foi possível carregar os produtos agora. Atualize em alguns segundos.</p>';
@@ -931,12 +1024,76 @@ if (produtoForm) {
     if (botao) botao.closest(".genero-chip").remove();
   });
 
-  // --- Salvar: sera ligado ao banco no proximo passo ---
+  // --- Salvar: envia os dados + a foto pro backend (que sobe pro Storage) ---
   const produtoMsg = document.getElementById("produtoMsg");
-  produtoForm.addEventListener("submit", (evento) => {
+
+  function avisar(texto, erro = false) {
+    if (!produtoMsg) return;
+    produtoMsg.textContent = texto;
+    produtoMsg.style.color = erro ? "var(--botoes)" : "var(--accent)";
+  }
+
+  produtoForm.addEventListener("submit", async (evento) => {
     evento.preventDefault();
-    if (produtoMsg) {
-      produtoMsg.textContent = "Tela pronta! Salvar no banco entra no próximo passo.";
+    avisar("");
+
+    // So vendedor pode cadastrar
+    const usuario = JSON.parse(localStorage.getItem("usuario") || "null");
+    if (!usuario || usuario.tipo_usuario !== "v") {
+      avisar("Apenas vendedores podem cadastrar produtos.", true);
+      return;
+    }
+
+    const nome = produtoForm.nome.value.trim();
+    const tipo = produtoForm.querySelector("input[name='tipo']:checked")?.value || "";
+
+    // Preco em formato BR ("R$ 289,90") -> numero limpo ("289.90")
+    const preco = produtoForm.preco.value
+      .replace(/[^\d.,]/g, "")
+      .replace(/\./g, "")
+      .replace(",", ".");
+
+    if (!nome || !preco || Number(preco) <= 0) {
+      avisar("Preencha ao menos o nome e um preço válido.", true);
+      return;
+    }
+
+    // Junta os generos escolhidos numa string ("Rock, Pop Rock")
+    const generos = [...generoChips.querySelectorAll(".genero-chip span")]
+      .map((s) => s.textContent)
+      .join(", ");
+
+    // FormData porque vai arquivo junto (o navegador cuida do cabecalho)
+    const dados = new FormData();
+    dados.append("tipo", tipo);
+    dados.append("nome", nome);
+    dados.append("artista", produtoForm.artista.value.trim());
+    dados.append("preco", preco);
+    dados.append("estoque", produtoForm.estoque.value || "0");
+    dados.append("generos", generos);
+    dados.append("descricao", produtoForm.descricao.value.trim());
+    if (fotoInput.files[0]) dados.append("foto", fotoInput.files[0]);
+
+    const botao = produtoForm.querySelector("button[type='submit']");
+    botao.disabled = true;
+    botao.textContent = "Salvando...";
+
+    try {
+      const resposta = await fetch(`${API_URL}/produtos`, { method: "POST", body: dados });
+      const corpo = await resposta.json();
+
+      if (!resposta.ok) {
+        avisar(corpo.erro || "Não foi possível cadastrar o produto.", true);
+        return;
+      }
+
+      // Deu certo: vai pra tela do produto recem-criado
+      window.location.href = `product.html?id=${corpo.id}`;
+    } catch {
+      avisar("Servidor indisponível. Tente de novo em alguns segundos.", true);
+    } finally {
+      botao.disabled = false;
+      botao.textContent = "Salvar produto";
     }
   });
 }

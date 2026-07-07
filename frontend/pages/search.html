@@ -41,10 +41,44 @@
     <a href="search.html?cat=ofertas">Ofertas</a>
   </nav>
 
-  <main class="store-main">
-    <h1 class="search-title" id="searchTitle">Resultados</h1>
-    <div id="searchResults">
-      <p class="grid-message">Carregando produtos...</p>
+  <main class="store-main store-main--search">
+    <aside class="filters">
+      <h1>Filtros <span id="filterCount">(0)</span></h1>
+      <div class="filters__ativos" id="filtrosAtivos"></div>
+
+      <div class="filters__section">
+        <div class="range-group">
+          <label for="priceMin">A partir de:</label>
+          <input id="priceMin" type="range" min="0" max="300" value="0" />
+          <small id="priceMinLabel">Qualquer valor</small>
+        </div>
+        <div class="range-group">
+          <label for="priceMax">Até:</label>
+          <input id="priceMax" type="range" min="0" max="300" value="300" />
+          <small id="priceMaxLabel">Até R$300,00</small>
+        </div>
+      </div>
+
+      <div class="filters__section">
+        <h2>Gênero</h2>
+        <div class="filters__opcoes" id="generoFiltros">
+          <!-- preenchido pelo app.js com todos os generos possiveis -->
+        </div>
+      </div>
+
+      <div class="filters__section">
+        <h2>Estoque</h2>
+        <div class="filters__opcoes">
+          <label class="filtro-check"><input type="checkbox" data-filtro="estoque" value="1" /><span>Em estoque</span></label>
+        </div>
+      </div>
+    </aside>
+
+    <div class="search-content">
+      <h1 class="search-title" id="searchTitle">Resultados</h1>
+      <div id="searchResults">
+        <p class="grid-message">Carregando produtos...</p>
+      </div>
     </div>
   </main>
 
