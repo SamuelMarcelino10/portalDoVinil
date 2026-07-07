@@ -304,6 +304,36 @@ if (produtoNome) {
     });
   }
 
+  // --- Botao "Compre ja": adiciona ao carrinho e vai pro pagamento ---
+  const btnCompra = document.getElementById("btn-compra");
+  if (btnCompra) {
+    btnCompra.addEventListener("click", async (e) => {
+      e.preventDefault();
+
+      const usuario = JSON.parse(localStorage.getItem("usuario") || "null");
+      if (!usuario) {
+        alert("Você precisa estar logado para comprar.");
+        window.location.href = "login.html";
+        return;
+      }
+
+      try {
+        await fetch(`${API_URL}/cart`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            usuario_id: usuario.id,
+            produto_id: Number(id),
+            quantidade: quantidade,
+          }),
+        });
+        window.location.href = "payment.html";
+      } catch {
+        alert("Não foi possível continuar. Tente de novo em alguns segundos.");
+      }
+    });
+  }
+
   // Preenche a tela com os dados do produto vindo da API
   function mostrarProduto(p) {
     document.title = `Portal do Vinil | ${p.nome}`;
@@ -422,4 +452,256 @@ if (productsGrid) {
       productsGrid.innerHTML =
         '<p class="grid-message">Nao foi possivel carregar os produtos agora. Atualize a pagina em alguns segundos.</p>';
     });
+}
+
+// --- Pagina de pagamento: carrega o carrinho do usuario logado ---
+const cartItems = document.getElementById("cartItems");
+
+if (cartItems) {
+  const FRETE = 20; // valor fixo por enquanto
+  const DESCONTO = 0; // cupom ainda nao implementado
+
+  const totalProdutosEl = document.getElementById("totalProdutos");
+  const totalFreteEl = document.getElementById("totalFrete");
+  const totalDescontosEl = document.getElementById("totalDescontos");
+  const totalCompraEl = document.getElementById("totalCompra");
+
+  const reais = (v) =>
+    new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v);
+
+  const usuario = JSON.parse(localStorage.getItem("usuario") || "null");
+
+  function calcularTotais(itens) {
+    const produtos = itens.reduce((soma, i) => soma + Number(i.preco) * i.quantidade, 0);
+    const frete = itens.length ? FRETE : 0;
+    totalProdutosEl.textContent = reais(produtos);
+    totalFreteEl.textContent = reais(frete);
+    totalDescontosEl.textContent = `- ${reais(DESCONTO)}`;
+    totalCompraEl.textContent = reais(produtos + frete - DESCONTO);
+  }
+
+  function renderCarrinho(itens) {
+    if (!itens.length) {
+      cartItems.innerHTML = '<p class="pay-cart__msg">Seu carrinho está vazio.</p>';
+      calcularTotais([]);
+      return;
+    }
+
+    cartItems.innerHTML = itens
+      .map((i) => {
+        const titulo = i.artista ? `${i.artista} - ${i.nome}` : i.nome;
+        const linha = Number(i.preco) * i.quantidade;
+        return `
+          <div class="pay-cart__item" data-id="${i.id}" data-max="${i.estoque}">
+            <img src="../pics/${i.imagem}" alt="${titulo}" onerror="this.src='../pics/logo.svg'">
+            <span class="pay-cart__nome">${titulo}</span>
+            <div class="pay-qty">
+              <button type="button" data-acao="menos" ${i.quantidade <= 1 ? "disabled" : ""}>-</button>
+              <span>${i.quantidade}</span>
+              <button type="button" data-acao="mais" ${i.quantidade >= i.estoque ? "disabled" : ""}>+</button>
+            </div>
+            <strong class="pay-cart__preco">${reais(linha)}</strong>
+            <button type="button" class="pay-cart__remove" data-acao="remover" title="Remover">🗑</button>
+          </div>`;
+      })
+      .join("");
+
+    calcularTotais(itens);
+  }
+
+  function carregarCarrinho() {
+    if (!usuario) {
+      cartItems.innerHTML = '<p class="pay-cart__msg">Faça login para ver o seu carrinho.</p>';
+      calcularTotais([]);
+      return;
+    }
+    fetch(`${API_URL}/cart?usuario_id=${usuario.id}`)
+      .then((r) => r.json())
+      .then(renderCarrinho)
+      .catch(() => {
+        cartItems.innerHTML = '<p class="pay-cart__msg">Não foi possível carregar o carrinho.</p>';
+      });
+  }
+
+  // Clique nos botoes de +/-/remover de cada item
+  cartItems.addEventListener("click", async (e) => {
+    const botao = e.target.closest("button[data-acao]");
+    if (!botao || !usuario) return;
+
+    const item = botao.closest(".pay-cart__item");
+    const id = item.dataset.id;
+    const max = Number(item.dataset.max);
+    const qtdAtual = Number(item.querySelector(".pay-qty span").textContent);
+
+    try {
+      if (botao.dataset.acao === "remover") {
+        await fetch(`${API_URL}/cart/${id}?usuario_id=${usuario.id}`, { method: "DELETE" });
+      } else {
+        const nova =
+          botao.dataset.acao === "mais" ? Math.min(max, qtdAtual + 1) : Math.max(1, qtdAtual - 1);
+        if (nova === qtdAtual) return;
+        await fetch(`${API_URL}/cart/${id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ usuario_id: usuario.id, quantidade: nova }),
+        });
+      }
+      carregarCarrinho();
+    } catch {
+      /* se falhar, a proxima acao tenta de novo */
+    }
+  });
+
+  // --- Endereco: "Usar endereço salvo" preenche com os dados do usuario ---
+  const enderecoRadios = document.querySelectorAll("input[name='endereco-tipo']");
+  const campoEstado = document.querySelector("select[name='estado']");
+  const campoCidade = document.querySelector("input[name='cidade']");
+  const campoEndereco = document.querySelector("input[name='endereco']");
+  const campoBairro = document.querySelector("input[name='bairro']");
+  const campoComplemento = document.querySelector("input[name='complemento']");
+
+  function aplicarEndereco() {
+    const marcado = document.querySelector("input[name='endereco-tipo']:checked");
+    const usarSalvo = marcado && marcado.value === "salvo";
+
+    if (usarSalvo && usuario) {
+      // Preenche com o endereco salvo do usuario (veio no login)
+      campoEstado.value = usuario.estado || "";
+      campoCidade.value = usuario.cidade || "";
+      campoEndereco.value = usuario.endereco || "";
+      campoBairro.value = usuario.bairro || "";
+      campoComplemento.value = usuario.complemento || "";
+    } else if (!usarSalvo) {
+      // "Usar outro endereco": limpa pra digitar do zero
+      campoEstado.value = "";
+      campoCidade.value = "";
+      campoEndereco.value = "";
+      campoBairro.value = "";
+      campoComplemento.value = "";
+    }
+
+    // So trava os campos quando realmente esta usando o endereco salvo
+    const bloquear = usarSalvo && !!usuario;
+    campoEstado.disabled = bloquear;
+    [campoCidade, campoEndereco, campoBairro, campoComplemento].forEach(
+      (c) => (c.readOnly = bloquear)
+    );
+  }
+  enderecoRadios.forEach((r) => r.addEventListener("change", aplicarEndereco));
+  aplicarEndereco();
+
+  // --- Cupom: nenhum cupom e valido por enquanto ---
+  const btnCupom = document.getElementById("btnValidarCupom");
+  const cupomInput = document.getElementById("cupomInput");
+  const cupomErro = document.getElementById("cupomErro");
+  if (btnCupom) {
+    btnCupom.addEventListener("click", () => {
+      cupomErro.textContent = cupomInput.value.trim() ? "Cupom inválido." : "Digite um cupom.";
+    });
+
+    // Some com a mensagem quando o campo fica vazio
+    cupomInput.addEventListener("input", () => {
+      if (!cupomInput.value.trim()) cupomErro.textContent = "";
+    });
+  }
+
+  // --- Forma de pagamento: mostra os campos certos pra cada metodo ---
+  const formaPagamento = document.getElementById("formaPagamento");
+  const camposCartao = document.getElementById("camposCartao");
+  const parcelasSelect = document.getElementById("parcelas");
+  const pagamentoInfo = document.getElementById("pagamentoInfo");
+  const numeroCartao = document.querySelector("input[name='numero-cartao']");
+  const cvvInput = document.querySelector("input[name='cvv']");
+
+  // Le o "Total da compra" do DOM e devolve como numero
+  function totalNumero() {
+    const txt = totalCompraEl.textContent.replace(/[^\d,]/g, "").replace(",", ".");
+    return Number(txt) || 0;
+  }
+
+  function montarParcelas() {
+    const total = totalNumero();
+    let html = '<option value="" disabled selected>Quantidade de parcelas</option>';
+    for (let n = 1; n <= 6; n++) {
+      html += `<option value="${n}">${n}x de ${reais(total / n)} sem juros</option>`;
+    }
+    parcelasSelect.innerHTML = html;
+  }
+
+  if (formaPagamento) {
+    formaPagamento.addEventListener("change", () => {
+      const metodo = formaPagamento.value;
+      const ehCartao = metodo === "credito";
+
+      camposCartao.hidden = !ehCartao;
+      if (ehCartao) montarParcelas();
+
+      if (metodo === "pix") {
+        pagamentoInfo.hidden = false;
+        pagamentoInfo.textContent = "Pagamento à vista no Pix — aprovação na hora.";
+      } else if (metodo === "boleto") {
+        pagamentoInfo.hidden = false;
+        pagamentoInfo.textContent = "O boleto vence em 3 dias úteis.";
+      } else {
+        pagamentoInfo.hidden = true;
+      }
+    });
+
+    // Formata o numero do cartao em grupos de 4 e limita o CVV a numeros
+    if (numeroCartao) {
+      numeroCartao.addEventListener("input", () => {
+        const digitos = numeroCartao.value.replace(/\D/g, "").slice(0, 16);
+        numeroCartao.value = digitos.replace(/(.{4})/g, "$1 ").trim();
+      });
+    }
+    if (cvvInput) {
+      cvvInput.addEventListener("input", () => {
+        cvvInput.value = cvvInput.value.replace(/\D/g, "").slice(0, 4);
+      });
+    }
+  }
+
+  // --- Botao "Efetuar o Pagamento": da baixa no estoque e esvazia o carrinho ---
+  const btnPagar = document.getElementById("btnPagar");
+  if (btnPagar) {
+    btnPagar.addEventListener("click", async () => {
+      if (!usuario) {
+        alert("Faça login para finalizar a compra.");
+        return;
+      }
+      if (!formaPagamento.value) {
+        alert("Selecione uma forma de pagamento.");
+        return;
+      }
+
+      const textoOriginal = btnPagar.textContent;
+      btnPagar.disabled = true;
+      btnPagar.textContent = "Processando...";
+
+      try {
+        const resposta = await fetch(`${API_URL}/checkout`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ usuario_id: usuario.id }),
+        });
+
+        const corpo = await resposta.json();
+
+        if (!resposta.ok) {
+          alert(corpo.erro || "Não foi possível finalizar a compra.");
+          return;
+        }
+
+        alert("Compra finalizada com sucesso! 🎉 O estoque foi atualizado.");
+        carregarCarrinho(); // recarrega (agora vazio)
+      } catch {
+        alert("Servidor indisponível. Tente de novo em alguns segundos.");
+      } finally {
+        btnPagar.disabled = false;
+        btnPagar.textContent = textoOriginal;
+      }
+    });
+  }
+
+  carregarCarrinho();
 }

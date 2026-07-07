@@ -72,4 +72,25 @@ class CartController
         Cart::remove($pdo, (int) $id, $usuarioId);
         echo json_encode(['mensagem' => 'Item removido']);
     }
+
+    // POST /checkout  -> finaliza a compra (baixa estoque + esvazia carrinho)
+    public function checkout(PDO $pdo): void
+    {
+        $dados = $this->corpo();
+        $usuarioId = (int) ($dados['usuario_id'] ?? 0);
+        if ($usuarioId <= 0) {
+            http_response_code(422);
+            echo json_encode(['erro' => 'usuario_id é obrigatório']);
+            return;
+        }
+
+        $resultado = Cart::checkout($pdo, $usuarioId);
+        if (!$resultado['ok']) {
+            http_response_code(409);
+            echo json_encode(['erro' => $resultado['erro']]);
+            return;
+        }
+
+        echo json_encode(['mensagem' => 'Compra finalizada com sucesso']);
+    }
 }

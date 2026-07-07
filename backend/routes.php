@@ -20,3 +20,6 @@ $router->get('/cart',         fn()   => (new CartController())->index($pdo));   
 $router->post('/cart',        fn()   => (new CartController())->add($pdo));
 $router->put('/cart/{id}',    fn($id) => (new CartController())->update($pdo, $id));
 $router->delete('/cart/{id}', fn($id) => (new CartController())->remove($pdo, $id)); // ?usuario_id=X
+
+// Finalizar compra (baixa estoque + esvazia carrinho)
+$router->post('/checkout', fn() => (new CartController())->checkout($pdo));

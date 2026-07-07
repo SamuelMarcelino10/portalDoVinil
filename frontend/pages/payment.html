@@ -33,109 +33,121 @@
     </div>
   </header>
 
-  <nav class="store-nav" aria-label="Categorias">
-    <a href="search.html">Vinis</a>
-    <a href="search.html">Vitrolas</a>
-    <a href="search.html">CD's</a>
-    <a href="search.html">Artistas</a>
-    <a href="search.html">Ofertas</a>
-  </nav>
-
   <main class="store-main">
-    <section class="payment-shell" aria-labelledby="paymentTitle">
-      <h1 id="paymentTitle" class="payment-title">Pagamento</h1>
+    <div class="pay-grid">
+      <!-- ============ COLUNA ESQUERDA: informacoes do pagamento ============ -->
+      <section class="pay-info">
+        <h2 class="pay-title">Informações para o Pagamento</h2>
 
-      <div class="payment-layout">
-        <article class="payment-card payment-card--methods">
-          <h2>Forma de Pagamento</h2>
+        <div class="pay-radios">
+          <label><input type="radio" name="endereco-tipo" value="salvo" checked /> Usar endereço salvo</label>
+          <label><input type="radio" name="endereco-tipo" value="outro" /> Usar outro endereço</label>
+        </div>
 
-          <form class="payment-options" aria-label="Selecionar forma de pagamento">
-            <label class="payment-option">
-              <input type="radio" name="payment-method" value="boleto" />
-              <span class="payment-option__marker" aria-hidden="true"></span>
-              <span class="payment-option__icon payment-option__icon--boleto" aria-hidden="true"><span></span></span>
-              <span class="payment-option__label">Boleto bancário</span>
-            </label>
+        <hr class="pay-sep" />
 
-            <label class="payment-option">
-              <input type="radio" name="payment-method" value="pix" checked />
-              <span class="payment-option__marker" aria-hidden="true"></span>
-              <span class="payment-option__icon payment-option__icon--pix" aria-hidden="true">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-              </span>
-              <span class="payment-option__label">Pix</span>
-            </label>
+        <div class="pay-row">
+          <select class="pay-field" name="estado">
+            <option value="" disabled selected>Estado</option>
+            <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
+            <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+            <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
+            <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
+            <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+            <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
+            <option>SP</option><option>SE</option><option>TO</option>
+          </select>
+          <input class="pay-field" type="text" name="cidade" placeholder="Selecione a sua cidade" />
+        </div>
 
-            <label class="payment-option">
-              <input type="radio" name="payment-method" value="credit" />
-              <span class="payment-option__marker" aria-hidden="true"></span>
-              <span class="payment-option__icon payment-option__icon--credit" aria-hidden="true">
-                <span class="payment-option__stripe payment-option__stripe--gold"></span>
-                <span class="payment-option__stripe payment-option__stripe--purple"></span>
-                <span class="payment-option__chip"></span>
-              </span>
-              <span class="payment-option__label">Cartão de Crédito</span>
-            </label>
+        <input class="pay-field" type="text" name="endereco" placeholder="Digite o seu endereço" />
 
-            <label class="payment-option">
-              <input type="radio" name="payment-method" value="paypal" />
-              <span class="payment-option__marker" aria-hidden="true"></span>
-              <span class="payment-option__icon payment-option__icon--paypal" aria-hidden="true">P</span>
-              <span class="payment-option__label">PayPal</span>
-            </label>
-          </form>
-        </article>
+        <div class="pay-row">
+          <input class="pay-field" type="text" name="bairro" placeholder="Digite o bairro" />
+          <input class="pay-field" type="text" name="complemento" placeholder="Complemento" />
+        </div>
 
-        <article class="payment-card payment-card--address">
-          <h2>Informações de endereço</h2>
+        <hr class="pay-sep" />
 
-          <form class="payment-address" aria-label="Preencher endereço de cobrança">
-            <label>
-              <span class="sr-only">Rua</span>
-              <input type="text" placeholder="Rua" />
-            </label>
-            <label>
-              <span class="sr-only">Endereço</span>
-              <input type="text" placeholder="Endereço" />
-            </label>
-            <div class="payment-address__row">
-              <label>
-                <span class="sr-only">CEP</span>
-                <input type="text" placeholder="CEP" />
-              </label>
-              <label>
-                <span class="sr-only">Número</span>
-                <input type="text" placeholder="Número" />
-              </label>
-            </div>
-            <div class="payment-address__row">
-              <label>
-                <span class="sr-only">Estado</span>
-                <input type="text" placeholder="Estado" />
-              </label>
-              <div class="payment-country" aria-label="País selecionado: Brasil">
-                <img src="../pics/img-brasil.svg" alt="Bandeira do Brasil" class="payment-country__flag" />
-                <span class="payment-country__arrow" aria-hidden="true"></span>
-              </div>
-            </div>
-          </form>
-        </article>
+        <h3 class="pay-subtitle">Cupom de Desconto</h3>
+        <div class="pay-row pay-cupom">
+          <input class="pay-field" type="text" name="cupom" id="cupomInput" placeholder="AAAA-BBBB-CCC-DD" />
+          <button type="button" class="btn btn-primary" id="btnValidarCupom">Validar</button>
+        </div>
+        <small class="pay-cupom-erro" id="cupomErro"></small>
 
-        <article class="payment-card payment-card--confirmation">
-          <h2>Confirmação de Pagamento</h2>
+        <hr class="pay-sep" />
 
-          <img src="../pics/qrcode.png" alt="QR code para pagamento" class="payment-qr" />
+        <h3 class="pay-subtitle">Forma de Pagamento</h3>
+        <select class="pay-field" name="forma-pagamento" id="formaPagamento">
+          <option value="" disabled selected>Selecione sua forma de pagamento</option>
+          <option value="pix">Pix</option>
+          <option value="credito">Cartão de Crédito</option>
+          <option value="boleto">Boleto</option>
+        </select>
 
-          <button type="button" class="payment-code" aria-label="Copiar código Pix">
-            <span class="payment-code__icon" aria-hidden="true"></span>
-            <span class="payment-code__text">J90jlksui6hsdg78op233...</span>
-          </button>
-        </article>
-      </div>
-    </section>
+        <!-- Campos do cartao: so aparecem quando escolhe "Cartao de Credito" -->
+        <div id="camposCartao" hidden>
+          <div class="pay-row">
+            <input class="pay-field pay-field--cvv" type="text" name="cvv" placeholder="CVV" inputmode="numeric" maxlength="4" />
+            <input class="pay-field" type="text" name="numero-cartao" placeholder="Número do cartão" inputmode="numeric" />
+          </div>
+          <select class="pay-field" name="parcelas" id="parcelas">
+            <option value="" disabled selected>Quantidade de parcelas</option>
+          </select>
+        </div>
+
+        <p class="pay-info-pagamento" id="pagamentoInfo" hidden></p>
+      </section>
+
+      <!-- ============ COLUNA DIREITA: o carrinho ============ -->
+      <aside class="pay-cart">
+        <h2 class="pay-title">Seu Carrinho</h2>
+
+        <div id="cartItems" class="pay-cart__items">
+          <p class="pay-cart__msg">Carregando carrinho...</p>
+        </div>
+
+        <hr class="pay-sep" />
+
+        <div class="pay-cart__totais">
+          <div class="pay-cart__linha"><span>Total dos Produtos:</span><strong id="totalProdutos">R$ 0,00</strong></div>
+          <div class="pay-cart__linha"><span>Valor do Frete:</span><strong id="totalFrete">R$ 0,00</strong></div>
+          <div class="pay-cart__linha"><span>Descontos Aplicados:</span><strong id="totalDescontos" class="pay-cart__desconto">R$ 0,00</strong></div>
+        </div>
+
+        <hr class="pay-sep" />
+
+        <div class="pay-cart__linha pay-cart__final">
+          <span>Total da compra:</span><strong id="totalCompra">R$ 0,00</strong>
+        </div>
+
+        <button type="button" class="btn btn-primary btn-full" id="btnPagar">Efetuar o Pagamento</button>
+      </aside>
+    </div>
   </main>
+
+  <footer class="site-footer">
+    <a class="site-footer__brand brand" href="../index.html" aria-label="Portal do Vinil">
+      <span class="brand__icon" aria-hidden="true">
+        <img src="../pics/logo.svg" alt="Portal do Vinil" />
+      </span>
+      <span class="brand__text">
+        <strong>Portal</strong>
+        <small>do Vinil</small>
+      </span>
+    </a>
+    <div class="site-footer__partner">
+      <img src="../pics/logoformatada1.svg" alt="OZICRONN" />
+    </div>
+    <div class="site-footer__credits">
+      <strong>Desenvolvido por</strong>
+      <p>Arthur V. C.</p>
+      <p>Samuel M.</p>
+      <p>Mateus R.</p>
+    </div>
+  </footer>
+
+  <script src="../assets/js/app.js"></script>
 </body>
 </html>
