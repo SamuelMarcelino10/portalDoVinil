@@ -102,6 +102,9 @@ function urlImagem(imagem, base = "") {
 const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
+  // Marca a sessao: estando no login, voltar pra home nao redireciona de novo
+  sessionStorage.setItem("entrou", "1");
+
   const loginErro = document.getElementById("loginErro");
   const loginBotao = loginForm.querySelector("button[type='submit']");
 

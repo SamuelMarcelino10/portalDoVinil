@@ -3,6 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    // Ao abrir o site, a primeira tela e sempre o login (uma vez por sessao
+    // do navegador). Depois de logar, a navegacao segue normal sem loop.
+    if (!sessionStorage.getItem("entrou")) {
+      sessionStorage.setItem("entrou", "1");
+      location.replace("pages/login.html");
+    }
+  </script>
   <title>Portal do Vinil | Início</title>
   <link rel="stylesheet" href="assets/css/index.css" />
 </head>
