@@ -1,5 +1,32 @@
 @import url("base.css");
 
+/* Titulo da pagina de resultados */
+.search-title {
+  margin: 0 0 20px;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+/* Mensagem de carregando / vazio / erro */
+.grid-message {
+  padding: 24px 0;
+  text-align: center;
+  opacity: 0.75;
+}
+
+/* Categoria "Artistas": um bloco por artista */
+.artist-group {
+  margin-bottom: 30px;
+}
+
+.artist-group__nome {
+  margin: 0 0 14px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  padding-bottom: 8px;
+  border-bottom: 2px dotted var(--border);
+}
+
 .store-main--search {
   display: grid;
   grid-template-columns: 260px 1fr;

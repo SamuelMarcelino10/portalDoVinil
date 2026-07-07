@@ -779,3 +779,164 @@ if (cartItems) {
 
   carregarCarrinho();
 }
+
+// --- Pagina de busca: resultados dinamicos por categoria ou por texto ---
+const searchResults = document.getElementById("searchResults");
+
+if (searchResults) {
+  const searchTitle = document.getElementById("searchTitle");
+  const cat = urlParams.get("cat"); // vinil | vitrola | cd | artistas | ofertas
+  const termo = (urlParams.get("q") || "").trim().toLowerCase();
+
+  const emReaisBusca = (v) =>
+    new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v);
+
+  // Monta o card de um produto
+  function cardBusca(p) {
+    const titulo = p.artista ? `${p.artista} - ${p.nome}` : p.nome;
+    const preco = Number(p.preco);
+    return `
+      <a class="result-card" href="product.html?id=${p.id}">
+        <div class="product-art">
+          <img src="../pics/${p.imagem}" alt="${titulo}" onerror="this.src='../pics/logo.svg'">
+        </div>
+        <h2>${titulo}</h2>
+        <strong>${emReaisBusca(preco)} no Pix</strong>
+        <span>Até 3x de ${emReaisBusca(preco / 3)}</span>
+      </a>`;
+  }
+
+  // Titulo da pagina conforme a categoria (ou a busca digitada)
+  const titulos = {
+    vinil: "Vinis",
+    vitrola: "Vitrolas",
+    cd: "CD's",
+    artistas: "Discos por artista",
+    ofertas: "Ofertas — os mais baratos",
+  };
+  if (searchTitle) {
+    if (termo) searchTitle.textContent = `Resultados para "${urlParams.get("q").trim()}"`;
+    else searchTitle.textContent = titulos[cat] || "Todos os produtos";
+  }
+
+  function mostrar(produtos) {
+    let lista = produtos;
+
+    // 1) Se o usuario digitou algo na busca, filtra por nome/artista
+    if (termo) {
+      lista = lista.filter((p) =>
+        `${p.artista || ""} ${p.nome}`.toLowerCase().includes(termo)
+      );
+    }
+
+    // 2) Filtro/ordenacao por categoria
+    if (cat === "vinil" || cat === "vitrola" || cat === "cd") {
+      lista = lista.filter((p) => p.tipo === cat);
+    } else if (cat === "ofertas") {
+      lista = [...lista].sort((a, b) => Number(a.preco) - Number(b.preco));
+    }
+
+    if (!lista.length) {
+      searchResults.innerHTML = '<p class="grid-message">Nenhum produto encontrado.</p>';
+      return;
+    }
+
+    // 3) "Artistas": agrupa os produtos por artista, um bloco pra cada
+    if (cat === "artistas") {
+      const grupos = {};
+      lista.forEach((p) => {
+        const nome = p.artista || "Outros";
+        (grupos[nome] = grupos[nome] || []).push(p);
+      });
+
+      searchResults.innerHTML = Object.keys(grupos)
+        .sort((a, b) => a.localeCompare(b, "pt-BR"))
+        .map(
+          (artista) => `
+          <section class="artist-group">
+            <h2 class="artist-group__nome">${artista}</h2>
+            <div class="results">${grupos[artista].map(cardBusca).join("")}</div>
+          </section>`
+        )
+        .join("");
+      return;
+    }
+
+    // Demais casos: uma grade unica de cards
+    searchResults.innerHTML = `<div class="results">${lista.map(cardBusca).join("")}</div>`;
+  }
+
+  fetch(`${API_URL}/produtos`)
+    .then((r) => {
+      if (!r.ok) throw new Error();
+      return r.json();
+    })
+    .then(mostrar)
+    .catch(() => {
+      searchResults.innerHTML =
+        '<p class="grid-message">Não foi possível carregar os produtos agora. Atualize em alguns segundos.</p>';
+    });
+}
+
+// --- Pagina de criar produto (vendedor): interatividade da propria tela ---
+const produtoForm = document.getElementById("produtoForm");
+
+if (produtoForm) {
+  // --- Foto: mostra a previa no circulo (ainda sem enviar pro servidor) ---
+  const fotoInput = document.getElementById("fotoInput");
+  const fotoPreview = document.getElementById("fotoPreview");
+  const btnTrocarFoto = document.getElementById("btnTrocarFoto");
+  const btnRemoverFoto = document.getElementById("btnRemoverFoto");
+  const fotoIconeHTML = '<span class="foto-preview__icone" aria-hidden="true">📷</span>';
+
+  btnTrocarFoto.addEventListener("click", () => fotoInput.click());
+
+  fotoInput.addEventListener("change", () => {
+    const arquivo = fotoInput.files[0];
+    if (!arquivo) return;
+    const url = URL.createObjectURL(arquivo);
+    fotoPreview.innerHTML = `<img src="${url}" alt="Pré-visualização da capa">`;
+  });
+
+  btnRemoverFoto.addEventListener("click", () => {
+    fotoInput.value = "";
+    fotoPreview.innerHTML = fotoIconeHTML;
+  });
+
+  // --- Generos: escolher no menu vira uma etiqueta (chip) removivel ---
+  const generoSelect = document.getElementById("generoSelect");
+  const generoChips = document.getElementById("generoChips");
+
+  function adicionarGenero(nome) {
+    // Nao repete um genero que ja foi escolhido
+    const jaTem = [...generoChips.querySelectorAll(".genero-chip span")].some(
+      (s) => s.textContent === nome
+    );
+    if (jaTem) return;
+
+    const chip = document.createElement("span");
+    chip.className = "genero-chip";
+    chip.innerHTML = `<button type="button" aria-label="Remover ${nome}">×</button><span>${nome}</span>`;
+    generoChips.appendChild(chip);
+  }
+
+  generoSelect.addEventListener("change", () => {
+    if (!generoSelect.value) return;
+    adicionarGenero(generoSelect.value);
+    generoSelect.value = ""; // volta pro texto "Gêneros"
+  });
+
+  generoChips.addEventListener("click", (evento) => {
+    const botao = evento.target.closest(".genero-chip button");
+    if (botao) botao.closest(".genero-chip").remove();
+  });
+
+  // --- Salvar: sera ligado ao banco no proximo passo ---
+  const produtoMsg = document.getElementById("produtoMsg");
+  produtoForm.addEventListener("submit", (evento) => {
+    evento.preventDefault();
+    if (produtoMsg) {
+      produtoMsg.textContent = "Tela pronta! Salvar no banco entra no próximo passo.";
+    }
+  });
+}

@@ -303,6 +303,184 @@ button {
   }
 }
 
+/* --- Cadastro de produto (tela do vendedor) --- */
+.produto-form {
+  max-width: 660px;
+  margin: 16px auto 40px;
+  display: grid;
+  gap: 16px;
+}
+
+.produto-form__titulo {
+  margin: 0;
+  font-size: 1.7rem;
+  font-weight: 600;
+  padding-bottom: 10px;
+  border-bottom: 2px dotted var(--border);
+}
+
+/* Campos de texto/numero/select/textarea com o mesmo visual */
+.produto-form input[type="text"],
+.produto-form input[type="number"],
+.produto-form select,
+.produto-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+}
+
+.produto-form input:focus,
+.produto-form select:focus,
+.produto-form textarea:focus {
+  border-color: var(--panel);
+  box-shadow: 0 0 0 3px rgba(143, 111, 96, 0.15);
+}
+
+.produto-form textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* Tipo do produto (Vinil / CD / Vitrola) */
+.produto-tipo {
+  display: flex;
+  gap: 22px;
+  font-size: 0.9rem;
+}
+
+.tipo-opcao {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.tipo-opcao input {
+  display: none;
+}
+
+.tipo-box {
+  width: 15px;
+  height: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  background: #cfe0ef; /* quadradinho azul claro quando desmarcado */
+  display: inline-grid;
+  place-items: center;
+  font-size: 13px;
+  line-height: 1;
+  color: #333;
+}
+
+.tipo-opcao input:checked + .tipo-box {
+  background: transparent;
+}
+
+.tipo-opcao input:checked + .tipo-box::after {
+  content: "×"; /* marca de selecionado, como na referencia */
+}
+
+/* Topo: campos (esquerda) | botoes da foto (meio) | previa (direita) */
+.produto-form__topo {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 16px;
+  align-items: center;
+}
+
+.produto-form__campos,
+.produto-form__foto-botoes {
+  display: grid;
+  gap: 12px;
+}
+
+.produto-form__foto-botoes .btn {
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.foto-preview {
+  width: 116px;
+  height: 116px;
+  border-radius: 50%;
+  background: var(--muted);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.foto-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.foto-preview__icone {
+  font-size: 2.6rem;
+  opacity: 0.55;
+}
+
+/* Linhas de campos */
+.produto-form__linha3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.produto-form__linha-generos {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 12px;
+}
+
+/* Caixa com as etiquetas de genero */
+.genero-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 44px;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.genero-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: var(--muted);
+  border-radius: 12px;
+  font-size: 0.82rem;
+}
+
+.genero-chip button {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 0.95rem;
+  line-height: 1;
+  color: var(--text);
+}
+
+.produto-form__msg {
+  margin: 0;
+  text-align: center;
+  color: var(--accent);
+  min-height: 1.2em;
+}
+
+@media (max-width: 720px) {
+  .produto-form__topo,
+  .produto-form__linha3,
+  .produto-form__linha-generos {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* --- Produto: arte do disco (card) --- */
  .product-art {
   position: relative;

@@ -34,74 +34,18 @@
   </header>
 
   <nav class="store-nav" aria-label="Categorias">
-    <a href="search.html">Vinis</a>
-    <a href="search.html">Vitrolas</a>
-    <a href="search.html">CD's</a>
-    <a href="search.html">Artistas</a>
-    <a href="search.html">Ofertas</a>
+    <a href="search.html?cat=vinil">Vinis</a>
+    <a href="search.html?cat=vitrola">Vitrolas</a>
+    <a href="search.html?cat=cd">CD's</a>
+    <a href="search.html?cat=artistas">Artistas</a>
+    <a href="search.html?cat=ofertas">Ofertas</a>
   </nav>
 
-  <main class="store-main store-main--search">
-    <aside class="filters">
-      <h1>Filtros <span id="filterCount">(1)</span></h1>
-      <div class="filters__chip">x Ate R$300,00</div>
-
-      <div class="range-group">
-        <label for="priceMin">A partir de:</label>
-        <input id="priceMin" type="range" min="0" max="300" value="0" />
-        <small id="priceMinLabel">Qualquer valor</small>
-      </div>
-
-      <div class="range-group">
-        <label for="priceMax">Ate:</label>
-        <input id="priceMax" type="range" min="0" max="300" value="300" />
-        <small id="priceMaxLabel">Ate R$300,00</small>
-      </div>
-
-      <div class="genre-group">
-        <h2>Genero</h2>
-        <div class="genre-list">
-          <button type="button" class="genre-pill is-active" data-genre="Rock">Rock</button>
-          <button type="button" class="genre-pill" data-genre="Pop Rock">Pop Rock</button>
-          <button type="button" class="genre-pill" data-genre="Rock Progressivo">Rock Progressivo</button>
-        </div>
-      </div>
-    </aside>
-
-    <section class="results" aria-label="Resultados da busca">
-      <a class="result-card" href="product.html" data-product data-title="Queen - A Night At The Opera" data-genre="Rock" data-price="289">
-        <div class="product-art">
-          <img src="../pics/queen-a-night-at-the-opera-lp-removebg-preview.png" alt="Queen - A Night At The Opera">
-        </div>
-        <h2>Queen - A Night At The Opera</h2>
-        <strong>R$ 289,00 no Pix</strong>
-        <span>Ate 3x de R$ 96,33</span>
-      </a>
-      <a class="result-card" href="product.html" data-product data-title="Queen - A Night At The Opera" data-genre="Rock" data-price="289">
-        <div class="product-art">
-          <img src="../pics/queen-a-night-at-the-opera-lp-removebg-preview.png" alt="Queen - A Night At The Opera">
-        </div>
-        <h2>Queen - A Night At The Opera</h2>
-        <strong>R$ 289,00 no Pix</strong>
-        <span>Ate 3x de R$ 96,33</span>
-      </a>
-      <a class="result-card" href="product.html" data-product data-title="Queen - A Night At The Opera" data-genre="Rock" data-price="289">
-        <div class="product-art">
-          <img src="../pics/queen-a-night-at-the-opera-lp-removebg-preview.png" alt="Queen - A Night At The Opera">
-        </div>
-        <h2>Queen - A Night At The Opera</h2>
-        <strong>R$ 289,00 no Pix</strong>
-        <span>Ate 3x de R$ 96,33</span>
-      </a>
-      <a class="result-card" href="product.html" data-product data-title="Queen - A Night At The Opera" data-genre="Rock" data-price="289">
-        <div class="product-art">
-          <img src="../pics/queen-a-night-at-the-opera-lp-removebg-preview.png" alt="Queen - A Night At The Opera">
-        </div>
-        <h2>Queen - A Night At The Opera</h2>
-        <strong>R$ 289,00 no Pix</strong>
-        <span>Ate 3x de R$ 96,33</span>
-      </a>
-    </section>
+  <main class="store-main">
+    <h1 class="search-title" id="searchTitle">Resultados</h1>
+    <div id="searchResults">
+      <p class="grid-message">Carregando produtos...</p>
+    </div>
   </main>
 
   <footer class="site-footer">

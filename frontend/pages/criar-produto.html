@@ -34,18 +34,93 @@
   </header>
 
   <nav class="store-nav" aria-label="Categorias">
-    <a href="search.html">Vinis</a>
-    <a href="search.html">Vitrolas</a>
-    <a href="search.html">CD's</a>
-    <a href="search.html">Artistas</a>
-    <a href="search.html">Ofertas</a>
+    <a href="search.html?cat=vinil">Vinis</a>
+    <a href="search.html?cat=vitrola">Vitrolas</a>
+    <a href="search.html?cat=cd">CD's</a>
+    <a href="search.html?cat=artistas">Artistas</a>
+    <a href="search.html?cat=ofertas">Ofertas</a>
   </nav>
 
   <main class="store-main">
-    <section style="text-align: center; padding: 80px 20px;">
-      <h1>Adicionar Produto</h1>
-      <p style="opacity: 0.75; font-size: 1.1rem;">🚧 Esta tela ainda será implementada.</p>
-    </section>
+    <form class="produto-form" id="produtoForm" novalidate>
+      <h1 class="produto-form__titulo">Cadastro do Produto</h1>
+
+      <!-- Tipo do produto (so um pode ficar marcado) -->
+      <div class="produto-tipo">
+        <label class="tipo-opcao">
+          <input type="radio" name="tipo" value="vinil" checked />
+          <span class="tipo-box"></span>Vinil
+        </label>
+        <label class="tipo-opcao">
+          <input type="radio" name="tipo" value="cd" />
+          <span class="tipo-box"></span>CD
+        </label>
+        <label class="tipo-opcao">
+          <input type="radio" name="tipo" value="vitrola" />
+          <span class="tipo-box"></span>Vitrola
+        </label>
+      </div>
+
+      <!-- Topo: nome/artista (esquerda), botoes da foto (meio), previa da foto (direita) -->
+      <div class="produto-form__topo">
+        <div class="produto-form__campos">
+          <input type="text" name="nome" placeholder="Nome do Produto" />
+          <input type="text" name="artista" placeholder="Artista/Banda" />
+        </div>
+
+        <div class="produto-form__foto-botoes">
+          <button type="button" class="btn btn-secondary" id="btnRemoverFoto">Remover Foto</button>
+          <button type="button" class="btn btn-secondary" id="btnTrocarFoto">Trocar Foto</button>
+        </div>
+
+        <div class="produto-form__foto">
+          <div class="foto-preview" id="fotoPreview">
+            <span class="foto-preview__icone" aria-hidden="true">📷</span>
+          </div>
+          <input type="file" id="fotoInput" accept="image/*" hidden />
+        </div>
+      </div>
+
+      <!-- Selo | Data de Lancamento | Quantidade -->
+      <div class="produto-form__linha3">
+        <input type="text" name="selo" placeholder="Selo" />
+        <input type="text" name="data_lancamento" placeholder="Data de Lançamento" />
+        <input type="number" name="estoque" placeholder="Quantidade" min="0" />
+      </div>
+
+      <!-- Preco | Generos -->
+      <div class="produto-form__linha-generos">
+        <input type="text" name="preco" placeholder="Preço do Produto" inputmode="decimal" />
+        <select id="generoSelect">
+          <option value="" disabled selected>Gêneros</option>
+          <option value="Rock">Rock</option>
+          <option value="Pop">Pop</option>
+          <option value="Pop Rock">Pop Rock</option>
+          <option value="Rock Progressista">Rock Progressista</option>
+          <option value="Metal">Metal</option>
+          <option value="Indie">Indie</option>
+          <option value="Jazz">Jazz</option>
+          <option value="Blues">Blues</option>
+          <option value="MPB">MPB</option>
+          <option value="Samba">Samba</option>
+          <option value="Hip Hop">Hip Hop</option>
+          <option value="Eletrônica">Eletrônica</option>
+          <option value="Clássica">Clássica</option>
+          <option value="Reggae">Reggae</option>
+          <option value="Country">Country</option>
+        </select>
+      </div>
+
+      <!-- Etiquetas (chips) dos generos escolhidos -->
+      <div class="genero-chips" id="generoChips" aria-label="Gêneros escolhidos"></div>
+
+      <!-- Descricao -->
+      <textarea name="descricao" placeholder="Uma descrição sobre o produto..." rows="5"></textarea>
+
+      <button type="submit" class="btn btn-primary btn-full">Salvar produto</button>
+
+      <p class="produto-form__msg" id="produtoMsg" role="status"></p>
+    </form>
   </main>
 
   <footer class="site-footer">
