@@ -13,6 +13,80 @@ if (searchInput && queryParam) {
   searchInput.value = queryParam;
 }
 
+// Logo (marca): leva pra home; se ja estiver na propria pagina, nao faz nada
+document.querySelectorAll("a.brand").forEach((link) => {
+  link.addEventListener("click", (evento) => {
+    if (new URL(link.href).pathname === window.location.pathname) {
+      evento.preventDefault();
+    }
+  });
+});
+
+// --- Cabecalho: menu da conta (pessoa) e botao do carrinho ---
+const headerActions = document.querySelector(".header-actions");
+
+if (headerActions) {
+  // Caminho relativo certo dependendo se estamos na raiz ou dentro de /pages/
+  const emPages = window.location.pathname.includes("/pages/");
+  const prefixo = emPages ? "" : "pages/";
+
+  const contaBtn = headerActions.querySelector('[aria-label="Perfil"]');
+  const carrinhoBtn = headerActions.querySelector('[aria-label="Carrinho"]');
+
+  // Carrinho -> tela de pagamento
+  if (carrinhoBtn) {
+    carrinhoBtn.addEventListener("click", () => {
+      window.location.href = `${prefixo}payment.html`;
+    });
+  }
+
+  // Conta -> nao logado: vai pro login | logado: abre menu (Sair / Adicionar produto)
+  if (contaBtn) {
+    const menu = document.createElement("div");
+    menu.className = "account-menu";
+    headerActions.appendChild(menu);
+
+    function montarMenu(usuario) {
+      let html = "";
+      // "Adicionar produto" so aparece pra vendedor (tipo_usuario === 'v')
+      if (usuario.tipo_usuario === "v") {
+        html += '<button class="account-menu__item" data-acao="add-produto">Adicionar produto</button>';
+      }
+      html += '<button class="account-menu__item" data-acao="sair">Sair</button>';
+      menu.innerHTML = html;
+    }
+
+    contaBtn.addEventListener("click", (evento) => {
+      evento.preventDefault();
+      const usuario = JSON.parse(localStorage.getItem("usuario") || "null");
+      if (!usuario) {
+        window.location.href = `${prefixo}login.html`;
+        return;
+      }
+      montarMenu(usuario);
+      menu.classList.toggle("is-open");
+    });
+
+    menu.addEventListener("click", (evento) => {
+      const item = evento.target.closest("[data-acao]");
+      if (!item) return;
+      if (item.dataset.acao === "sair") {
+        localStorage.removeItem("usuario"); // desloga
+        window.location.href = `${prefixo}login.html`;
+      } else if (item.dataset.acao === "add-produto") {
+        window.location.href = `${prefixo}criar-produto.html`;
+      }
+    });
+
+    // Fecha o menu ao clicar fora dele
+    document.addEventListener("click", (evento) => {
+      if (!menu.contains(evento.target) && !contaBtn.contains(evento.target)) {
+        menu.classList.remove("is-open");
+      }
+    });
+  }
+}
+
 // Endereco do backend (API PHP no Render) - usado no login e no cadastro
 const API_URL = "https://portaldovinil.onrender.com";
 

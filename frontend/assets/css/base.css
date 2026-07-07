@@ -63,12 +63,15 @@ button {
 
 /* --- Header compartilhado (store pages) --- */
 .store-header {
+  position: relative;
   display: grid;
-  grid-template-columns: 1fr minmax(260px, 300px) 1fr;
+  grid-template-columns: 1fr auto auto; /* logo | busca | acoes (busca vai pra direita) */
   align-items: center;
-  gap: 14px;
-  padding: 12px 34px;
-  background: var(--panel);
+  gap: 18px;
+  padding: 14px 40px;
+  background: #6e5a52; /* marrom mais escuro, como na referencia */
+  outline: 2px dotted rgba(255, 255, 255, 0.4); /* borda pontilhada */
+  outline-offset: -8px;
 }
 
 .brand {
@@ -115,9 +118,7 @@ button {
   display: flex;
   align-items: stretch;
   position: relative;
-  justify-self: center;
-  width: 100%;
-  max-width: 390px;
+  width: 230px;
 }
 
 .search-form input {
@@ -179,10 +180,47 @@ button {
 }
 
 .header-actions {
+  position: relative;
   display: flex;
   justify-content: flex-end;
   gap: 12px;
   justify-self: end;
+}
+
+/* Menu que abre ao clicar no icone da pessoa */
+.account-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  min-width: 190px;
+  padding: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  z-index: 50;
+  display: none;
+}
+
+.account-menu.is-open {
+  display: grid;
+  gap: 2px;
+}
+
+.account-menu__item {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.account-menu__item:hover {
+  background: var(--muted);
 }
 
 /* --- Nav compartilhada (store pages) --- */
