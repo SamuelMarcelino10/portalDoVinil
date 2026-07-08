@@ -80,4 +80,23 @@ class ProductController
         http_response_code(201);
         echo json_encode(['id' => $id, 'imagem' => $imagemUrl]);
     }
+
+    // DELETE /produtos/{id}  -> apaga o produto e a foto dele no Storage
+    public function destroy(PDO $pdo, string $id): void
+    {
+        $produto = Product::find($pdo, (int) $id);
+        if (!$produto) {
+            http_response_code(404);
+            echo json_encode(['erro' => 'Produto não encontrado']);
+            return;
+        }
+
+        // Apaga a capa do Storage (se for uma imagem hospedada la)
+        if (!empty($produto['imagem'])) {
+            Storage::delete($produto['imagem']);
+        }
+
+        Product::delete($pdo, (int) $id);
+        echo json_encode(['ok' => true]);
+    }
 }

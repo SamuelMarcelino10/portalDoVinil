@@ -38,4 +38,11 @@ class Product
         ]);
         return (int) $stmt->fetchColumn();
     }
+
+    // Apaga um produto (o carrinho some junto pela regra de cascata do banco)
+    public static function delete(PDO $pdo, int $id): void
+    {
+        $stmt = $pdo->prepare("DELETE FROM produtos WHERE id = :id");
+        $stmt->execute(['id' => $id]);
+    }
 }

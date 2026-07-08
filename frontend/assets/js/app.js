@@ -99,6 +99,48 @@ function urlImagem(imagem, base = "") {
   return `${base}pics/${imagem}`;
 }
 
+// --- Excluir produto: so aparece pra vendedor (tipo_usuario === 'v') ---
+const usuarioAtual = JSON.parse(localStorage.getItem("usuario") || "null");
+const ehVendedor = usuarioAtual?.tipo_usuario === "v";
+
+// HTML do botao de lixeira que aparece no hover do card (vazio se nao for vendedor)
+function botaoExcluir(id) {
+  return ehVendedor
+    ? `<button type="button" class="card-excluir" data-excluir="${id}" title="Excluir produto" aria-label="Excluir produto">🗑</button>`
+    : "";
+}
+
+// Confirma e chama o DELETE do backend; tira o card da tela se der certo
+async function excluirProduto(botao) {
+  const card = botao.closest(".product-card, .result-card");
+  const titulo = card?.querySelector("h2")?.textContent || "este produto";
+  if (!confirm(`Tem certeza que deseja excluir "${titulo}"?\nEssa ação não pode ser desfeita.`)) {
+    return;
+  }
+
+  botao.disabled = true;
+  try {
+    const r = await fetch(`${API_URL}/produtos/${botao.dataset.excluir}`, { method: "DELETE" });
+    if (!r.ok) throw new Error();
+    if (card) card.remove();
+  } catch {
+    botao.disabled = false;
+    alert("Não foi possível excluir o produto. Tente de novo em alguns segundos.");
+  }
+}
+
+// Liga a exclusao num container de cards (um listener so, por delegacao)
+function ativarExclusao(container) {
+  if (!container || !ehVendedor) return;
+  container.addEventListener("click", (evento) => {
+    const botao = evento.target.closest("[data-excluir]");
+    if (!botao) return;
+    evento.preventDefault(); // nao segue o link do card
+    evento.stopPropagation();
+    excluirProduto(botao);
+  });
+}
+
 const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
@@ -418,6 +460,7 @@ if (produtoNome) {
             const valor = Number(p.preco);
             return `
               <a class="product-card" href="product.html?id=${p.id}">
+                ${botaoExcluir(p.id)}
                 <div class="product-art">
                   <img src="${urlImagem(p.imagem, "../")}" alt="${titulo}" onerror="this.src='../pics/logo.svg'">
                 </div>
@@ -427,6 +470,8 @@ if (produtoNome) {
               </a>`;
           })
           .join("");
+
+        ativarExclusao(compreJunto);
       })
       .catch(() => (compreJunto.innerHTML = ""));
   }
@@ -458,6 +503,7 @@ if (productsGrid) {
 
         return `
           <a class="product-card" href="pages/product.html?id=${produto.id}">
+            ${botaoExcluir(produto.id)}
             <div class="product-art">
               <img src="${urlImagem(produto.imagem)}" alt="${titulo}" onerror="this.src='pics/logo.svg'">
             </div>
@@ -468,6 +514,8 @@ if (productsGrid) {
         `;
       })
       .join("");
+
+    ativarExclusao(productsGrid);
   }
 
   // Pede os produtos para a API; se der erro (ex: servidor "dormindo"), avisa
@@ -488,7 +536,10 @@ const cartItems = document.getElementById("cartItems");
 
 if (cartItems) {
   const FRETE = 20; // valor fixo por enquanto
-  const DESCONTO = 0; // cupom ainda nao implementado
+  const CUPOM_VALIDO = "primeiracompra"; // unico cupom do sistema
+  const VALOR_CUPOM = 20; // desconto do cupom, em reais
+  let desconto = 0; // 0 ate aplicar um cupom valido
+  let itensAtuais = []; // ultimo carrinho renderizado (pra recalcular no cupom)
 
   const totalProdutosEl = document.getElementById("totalProdutos");
   const totalFreteEl = document.getElementById("totalFrete");
@@ -501,12 +552,14 @@ if (cartItems) {
   const usuario = JSON.parse(localStorage.getItem("usuario") || "null");
 
   function calcularTotais(itens) {
+    itensAtuais = itens; // guarda pra recalcular quando aplicar o cupom
     const produtos = itens.reduce((soma, i) => soma + Number(i.preco) * i.quantidade, 0);
     const frete = itens.length ? FRETE : 0;
+    const desc = itens.length ? desconto : 0; // sem itens, nao aplica desconto
     totalProdutosEl.textContent = reais(produtos);
     totalFreteEl.textContent = reais(frete);
-    totalDescontosEl.textContent = `- ${reais(DESCONTO)}`;
-    totalCompraEl.textContent = reais(produtos + frete - DESCONTO);
+    totalDescontosEl.textContent = `- ${reais(desc)}`;
+    totalCompraEl.textContent = reais(Math.max(0, produtos + frete - desc));
   }
 
   function renderCarrinho(itens) {
@@ -619,18 +672,43 @@ if (cartItems) {
   enderecoRadios.forEach((r) => r.addEventListener("change", aplicarEndereco));
   aplicarEndereco();
 
-  // --- Cupom: nenhum cupom e valido por enquanto ---
+  // --- Cupom: so "primeiracompra" e valido (-R$20) ---
   const btnCupom = document.getElementById("btnValidarCupom");
   const cupomInput = document.getElementById("cupomInput");
   const cupomErro = document.getElementById("cupomErro");
+
+  // Mostra a mensagem: verde quando o cupom vale, vermelho (padrao) quando nao
+  function mostrarCupom(texto, ok) {
+    cupomErro.textContent = texto;
+    cupomErro.style.color = ok ? "var(--accent)" : "";
+  }
+
   if (btnCupom) {
     btnCupom.addEventListener("click", () => {
-      cupomErro.textContent = cupomInput.value.trim() ? "Cupom inválido." : "Digite um cupom.";
+      const codigo = cupomInput.value.trim().toLowerCase();
+
+      if (!codigo) {
+        desconto = 0;
+        mostrarCupom("Digite um cupom.", false);
+      } else if (codigo === CUPOM_VALIDO) {
+        desconto = VALOR_CUPOM;
+        mostrarCupom(`Cupom aplicado! -${reais(VALOR_CUPOM)}`, true);
+      } else {
+        desconto = 0;
+        mostrarCupom("Cupom inválido.", false);
+      }
+      calcularTotais(itensAtuais); // atualiza os totais da barra lateral
     });
 
-    // Some com a mensagem quando o campo fica vazio
+    // Se limpar o campo, some a mensagem e tira o desconto
     cupomInput.addEventListener("input", () => {
-      if (!cupomInput.value.trim()) cupomErro.textContent = "";
+      if (!cupomInput.value.trim()) {
+        mostrarCupom("", false);
+        if (desconto !== 0) {
+          desconto = 0;
+          calcularTotais(itensAtuais);
+        }
+      }
     });
   }
 
@@ -764,6 +842,7 @@ if (searchResults) {
     const preco = Number(p.preco);
     return `
       <a class="result-card" href="product.html?id=${p.id}">
+        ${botaoExcluir(p.id)}
         <div class="product-art">
           <img src="${urlImagem(p.imagem, "../")}" alt="${titulo}" onerror="this.src='../pics/logo.svg'">
         </div>
@@ -912,6 +991,9 @@ if (searchResults) {
         `<label class="filtro-check"><input type="checkbox" data-filtro="genero" value="${g}" /><span>${g}</span></label>`
     ).join("");
   }
+
+  // Exclusao de produto (vendedor) nos cards da busca
+  ativarExclusao(searchResults);
 
   // --- Liga os eventos dos filtros ---
   [priceMin, priceMax].forEach((s) =>

@@ -50,4 +50,37 @@ class Storage
         // URL publica do arquivo recem-enviado
         return "$url/storage/v1/object/public/" . self::BUCKET . "/$nome";
     }
+
+    // Apaga do Storage a foto correspondente a uma URL publica nossa.
+    public static function delete(string $urlPublica): void
+    {
+        $url = rtrim((string) getenv('SUPABASE_URL'), '/');
+        $key = (string) getenv('SUPABASE_SERVICE_KEY');
+        if ($url === '' || $key === '') {
+            return;
+        }
+
+        // So mexe se a URL for mesmo do nosso bucket
+        $marcador = '/object/public/' . self::BUCKET . '/';
+        $pos = strpos($urlPublica, $marcador);
+        if ($pos === false) {
+            return;
+        }
+        $arquivo = substr($urlPublica, $pos + strlen($marcador));
+        if ($arquivo === '') {
+            return;
+        }
+
+        $ch = curl_init("$url/storage/v1/object/" . self::BUCKET . "/$arquivo");
+        curl_setopt_array($ch, [
+            CURLOPT_CUSTOMREQUEST  => 'DELETE',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER     => [
+                "apikey: $key",
+                "Authorization: Bearer $key",
+            ],
+        ]);
+        curl_exec($ch);
+        curl_close($ch);
+    }
 }
