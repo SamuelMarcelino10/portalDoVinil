@@ -99,6 +99,48 @@ function urlImagem(imagem, base = "") {
   return `${base}pics/${imagem}`;
 }
 
+// --- Excluir produto: so aparece pra vendedor (tipo_usuario === 'v') ---
+const usuarioAtual = JSON.parse(localStorage.getItem("usuario") || "null");
+const ehVendedor = usuarioAtual?.tipo_usuario === "v";
+
+// HTML do botao de lixeira que aparece no hover do card (vazio se nao for vendedor)
+function botaoExcluir(id) {
+  return ehVendedor
+    ? `<button type="button" class="card-excluir" data-excluir="${id}" title="Excluir produto" aria-label="Excluir produto">🗑</button>`
+    : "";
+}
+
+// Confirma e chama o DELETE do backend; tira o card da tela se der certo
+async function excluirProduto(botao) {
+  const card = botao.closest(".product-card, .result-card");
+  const titulo = card?.querySelector("h2")?.textContent || "este produto";
+  if (!confirm(`Tem certeza que deseja excluir "${titulo}"?\nEssa ação não pode ser desfeita.`)) {
+    return;
+  }
+
+  botao.disabled = true;
+  try {
+    const r = await fetch(`${API_URL}/produtos/${botao.dataset.excluir}`, { method: "DELETE" });
+    if (!r.ok) throw new Error();
+    if (card) card.remove();
+  } catch {
+    botao.disabled = false;
+    alert("Não foi possível excluir o produto. Tente de novo em alguns segundos.");
+  }
+}
+
+// Liga a exclusao num container de cards (um listener so, por delegacao)
+function ativarExclusao(container) {
+  if (!container || !ehVendedor) return;
+  container.addEventListener("click", (evento) => {
+    const botao = evento.target.closest("[data-excluir]");
+    if (!botao) return;
+    evento.preventDefault(); // nao segue o link do card
+    evento.stopPropagation();
+    excluirProduto(botao);
+  });
+}
+
 const loginForm = document.getElementById("loginForm");
 
 if (loginForm) {
@@ -415,18 +457,24 @@ if (produtoNome) {
         compreJunto.innerHTML = outros
           .map((p) => {
             const titulo = p.artista ? `${p.artista} - ${p.nome}` : p.nome;
+            const artista = p.artista || "Sem artista";
             const valor = Number(p.preco);
             return `
-              <a class="product-card" href="product.html?id=${p.id}">
+              <div class="product-card">
+                <div class="product-card__header">${artista}${botaoExcluir(p.id)}</div>
                 <div class="product-art">
                   <img src="${urlImagem(p.imagem, "../")}" alt="${titulo}" onerror="this.src='../pics/logo.svg'">
                 </div>
-                <h2>${titulo}</h2>
-                <strong>${emReais(valor)} no Pix</strong>
-                <span>Até 3x de ${emReais(valor / 3)}</span>
-              </a>`;
+                <div class="product-card__info">
+                  <strong class="product-card__price">${emReais(valor)} no Pix</strong>
+                  <span class="product-card__installments">Até 3x de ${emReais(valor / 3)}</span>
+                  <div class="product-card__divider"></div>
+                  <a class="product-card__action" href="product.html?id=${p.id}">Ver Produto</a>
+                </div>
+              </div>`;
           })
           .join("");
+        ativarExclusao(compreJunto);
       })
       .catch(() => (compreJunto.innerHTML = ""));
   }
@@ -455,16 +503,21 @@ if (productsGrid) {
       .map((produto) => {
         const preco = Number(produto.preco);
         const titulo = produto.artista ? `${produto.artista} - ${produto.nome}` : produto.nome;
+        const artista = produto.artista || "Sem artista";
 
         return `
-          <a class="product-card" href="pages/product.html?id=${produto.id}">
+          <div class="product-card">
+            <div class="product-card__header">${artista}${botaoExcluir(produto.id)}</div>
             <div class="product-art">
               <img src="${urlImagem(produto.imagem)}" alt="${titulo}" onerror="this.src='pics/logo.svg'">
             </div>
-            <h2>${titulo}</h2>
-            <strong>${precoBRL(preco)} no Pix</strong>
-            <span>Ate 3x de ${precoBRL(preco / 3)}</span>
-          </a>
+            <div class="product-card__info">
+              <strong class="product-card__price">${precoBRL(preco)} no Pix</strong>
+              <span class="product-card__installments">Ate 3x de ${precoBRL(preco / 3)}</span>
+              <div class="product-card__divider"></div>
+              <a class="product-card__action" href="pages/product.html?id=${produto.id}">Ver Produto</a>
+            </div>
+          </div>
         `;
       })
       .join("");
@@ -476,7 +529,10 @@ if (productsGrid) {
       if (!resposta.ok) throw new Error("Resposta invalida da API");
       return resposta.json();
     })
-    .then(renderProdutos)
+    .then((produtos) => {
+      renderProdutos(produtos);
+      ativarExclusao(productsGrid);
+    })
     .catch(() => {
       productsGrid.innerHTML =
         '<p class="grid-message">Nao foi possivel carregar os produtos agora. Atualize a pagina em alguns segundos.</p>';
@@ -761,16 +817,21 @@ if (searchResults) {
   // Monta o card de um produto
   function cardBusca(p) {
     const titulo = p.artista ? `${p.artista} - ${p.nome}` : p.nome;
+    const artista = p.artista || "Sem artista";
     const preco = Number(p.preco);
     return `
-      <a class="result-card" href="product.html?id=${p.id}">
-        <div class="product-art">
+      <div class="result-card">
+        <div class="result-card__header">${artista}${botaoExcluir(p.id)}</div>
+        <div class="result-card__art">
           <img src="${urlImagem(p.imagem, "../")}" alt="${titulo}" onerror="this.src='../pics/logo.svg'">
         </div>
-        <h2>${titulo}</h2>
-        <strong>${emReaisBusca(preco)} no Pix</strong>
-        <span>Até 3x de ${emReaisBusca(preco / 3)}</span>
-      </a>`;
+        <div class="result-card__info">
+          <strong class="result-card__price">${emReaisBusca(preco)} no Pix</strong>
+          <span class="result-card__installments">Até 3x de ${emReaisBusca(preco / 3)}</span>
+          <div class="result-card__divider"></div>
+          <a class="result-card__action" href="product.html?id=${p.id}">Ver Produto</a>
+        </div>
+      </div>`;
   }
 
   // Titulo da pagina conforme a categoria (ou a busca digitada)
@@ -897,11 +958,13 @@ if (searchResults) {
           </section>`
         )
         .join("");
+      ativarExclusao(searchResults);
       return;
     }
 
     // Demais casos: uma grade unica de cards
     searchResults.innerHTML = `<div class="results">${lista.map(cardBusca).join("")}</div>`;
+    ativarExclusao(searchResults);
   }
 
   // Cria os checkboxes com TODOS os generos possiveis
@@ -1002,6 +1065,41 @@ if (produtoForm) {
   // --- Generos: escolher no menu vira uma etiqueta (chip) removivel ---
   const generoSelect = document.getElementById("generoSelect");
   const generoChips = document.getElementById("generoChips");
+
+  // --- Tipo de produto: mostrar/esconder campos de genero e alterar placeholder de artista ---
+  const tipoRadios = document.querySelectorAll("input[name='tipo']");
+  const artistaInput = produtoForm.artista;
+
+  function atualizarCamposSecundarios() {
+    const tipoSelecionado = produtoForm.querySelector("input[name='tipo']:checked")?.value || "";
+    const eVitrola = tipoSelecionado === "vitrola";
+
+    // Mostra/esconde select de gêneros
+    if (generoSelect) {
+      generoSelect.style.display = eVitrola ? "none" : "";
+    }
+
+    // Mostra/esconde chips de gêneros
+    if (generoChips) {
+      generoChips.style.display = eVitrola ? "none" : "";
+      if (eVitrola) {
+        // Limpa gêneros selecionados ao mudar para vitrola
+        generoChips.innerHTML = "";
+      }
+    }
+
+    // Altera placeholder do artista
+    if (artistaInput) {
+      artistaInput.placeholder = eVitrola ? "Marca" : "Artista/Banda";
+    }
+  }
+
+  tipoRadios.forEach((radio) => {
+    radio.addEventListener("change", atualizarCamposSecundarios);
+  });
+
+  // Executa na primeira carga
+  atualizarCamposSecundarios();
 
   function adicionarGenero(nome) {
     // Nao repete um genero que ja foi escolhido
