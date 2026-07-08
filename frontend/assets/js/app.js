@@ -466,6 +466,7 @@ if (produtoNome) {
                   <img src="${urlImagem(p.imagem, "../")}" alt="${titulo}" onerror="this.src='../pics/logo.svg'">
                 </div>
                 <div class="product-card__info">
+                  <h3 class="product-card__nome">${p.nome}</h3>
                   <strong class="product-card__price">${emReais(valor)} no Pix</strong>
                   <span class="product-card__installments">Até 3x de ${emReais(valor / 3)}</span>
                   <div class="product-card__divider"></div>
@@ -512,6 +513,7 @@ if (productsGrid) {
               <img src="${urlImagem(produto.imagem)}" alt="${titulo}" onerror="this.src='pics/logo.svg'">
             </div>
             <div class="product-card__info">
+              <h3 class="product-card__nome">${produto.nome}</h3>
               <strong class="product-card__price">${precoBRL(preco)} no Pix</strong>
               <span class="product-card__installments">Ate 3x de ${precoBRL(preco / 3)}</span>
               <div class="product-card__divider"></div>
@@ -826,6 +828,7 @@ if (searchResults) {
           <img src="${urlImagem(p.imagem, "../")}" alt="${titulo}" onerror="this.src='../pics/logo.svg'">
         </div>
         <div class="result-card__info">
+          <h3 class="result-card__nome">${p.nome}</h3>
           <strong class="result-card__price">${emReaisBusca(preco)} no Pix</strong>
           <span class="result-card__installments">Até 3x de ${emReaisBusca(preco / 3)}</span>
           <div class="result-card__divider"></div>
