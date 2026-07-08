@@ -546,7 +546,10 @@ const cartItems = document.getElementById("cartItems");
 
 if (cartItems) {
   const FRETE = 20; // valor fixo por enquanto
-  const DESCONTO = 0; // cupom ainda nao implementado
+  const DESCONTO = 0;const CUPOM_VALIDO = "primeiracompra"; // unico cupom do sistema
+  const VALOR_CUPOM = 20; // desconto do cupom, em reais
+  let desconto = 0; // 0 ate aplicar um cupom valido
+  let itensAtuais = []; // cupom ainda nao implementado
 
   const totalProdutosEl = document.getElementById("totalProdutos");
   const totalFreteEl = document.getElementById("totalFrete");
@@ -559,12 +562,16 @@ if (cartItems) {
   const usuario = JSON.parse(localStorage.getItem("usuario") || "null");
 
   function calcularTotais(itens) {
+    itensAtuais = itens; // guarda pra recalcular quando aplicar o cupom
     const produtos = itens.reduce((soma, i) => soma + Number(i.preco) * i.quantidade, 0);
     const frete = itens.length ? FRETE : 0;
+    const desc = itens.length ? desconto : 0; // sem itens, nao aplica desconto
     totalProdutosEl.textContent = reais(produtos);
     totalFreteEl.textContent = reais(frete);
     totalDescontosEl.textContent = `- ${reais(DESCONTO)}`;
     totalCompraEl.textContent = reais(produtos + frete - DESCONTO);
+    totalDescontosEl.textContent = `- ${reais(desc)}`;
+    totalCompraEl.textContent = reais(Math.max(0, produtos + frete - desc));
   }
 
   function renderCarrinho(itens) {
@@ -677,18 +684,43 @@ if (cartItems) {
   enderecoRadios.forEach((r) => r.addEventListener("change", aplicarEndereco));
   aplicarEndereco();
 
-  // --- Cupom: nenhum cupom e valido por enquanto ---
+   // --- Cupom: so "primeiracompra" e valido (-R$20) ---
   const btnCupom = document.getElementById("btnValidarCupom");
   const cupomInput = document.getElementById("cupomInput");
   const cupomErro = document.getElementById("cupomErro");
+
+  // Mostra a mensagem: verde quando o cupom vale, vermelho (padrao) quando nao
+  function mostrarCupom(texto, ok) {
+    cupomErro.textContent = texto;
+    cupomErro.style.color = ok ? "var(--accent)" : "";
+  }
+
   if (btnCupom) {
     btnCupom.addEventListener("click", () => {
-      cupomErro.textContent = cupomInput.value.trim() ? "Cupom inválido." : "Digite um cupom.";
+      const codigo = cupomInput.value.trim().toLowerCase();
+
+      if (!codigo) {
+        desconto = 0;
+        mostrarCupom("Digite um cupom.", false);
+      } else if (codigo === CUPOM_VALIDO) {
+        desconto = VALOR_CUPOM;
+        mostrarCupom(`Cupom aplicado! -${reais(VALOR_CUPOM)}`, true);
+      } else {
+        desconto = 0;
+        mostrarCupom("Cupom inválido.", false);
+      }
+      calcularTotais(itensAtuais);
     });
 
-    // Some com a mensagem quando o campo fica vazio
+    // Se limpar o campo, some a mensagem e tira o desconto
     cupomInput.addEventListener("input", () => {
-      if (!cupomInput.value.trim()) cupomErro.textContent = "";
+      if (!cupomInput.value.trim()) {
+        mostrarCupom("", false);
+        if (desconto !== 0) {
+          desconto = 0;
+          calcularTotais(itensAtuais);
+        }
+      }
     });
   }
 
