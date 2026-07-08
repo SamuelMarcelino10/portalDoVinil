@@ -11,6 +11,7 @@ $router->get('/', fn() => print(json_encode(['api' => 'Portal do Vinil', 'status
 $router->get('/produtos',      fn()   => (new ProductController())->index($pdo));
 $router->get('/produtos/{id}', fn($id) => (new ProductController())->show($pdo, $id));
 $router->post('/produtos',     fn()   => (new ProductController())->create($pdo)); // cadastro (vendedor)
+$router->delete('/produtos/{id}', fn($id) => (new ProductController())->destroy($pdo, $id)); // excluir (vendedor)
 
 // Autenticação
 $router->post('/register', fn() => (new AuthController())->register($pdo));

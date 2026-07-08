@@ -39,9 +39,3 @@ CREATE TABLE carrinho (
   criado_em   TIMESTAMP DEFAULT now(),
   UNIQUE (usuario_id, produto_id)  -- 1 linha por produto (adicionar de novo soma)
 );
-
--- Alguns produtos de exemplo pra testar a API já com dados
-INSERT INTO produtos (nome, descricao, preco, tipo, artista, estoque, imagem) VALUES
-  ('A Night at the Opera', 'LP clássico de 1975', 289.00, 'vinil', 'Queen', 4, 'queen-a-night-at-the-opera-lp-removebg-preview.png'),
-  ('Swimming', 'Álbum de 2018', 199.90, 'vinil', 'Mac Miller', 7, 'albumdeluxe.jpg'),
-  ('Circles', 'Álbum póstumo', 219.90, 'cd', 'Mac Miller', 10, 'macmiller.jpeg');
